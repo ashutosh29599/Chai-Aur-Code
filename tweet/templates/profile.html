@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Chai aur Tweet
+{% endblock title %}
+
+{% block content %}
+    <h1 class="text-center mt-4">Hello, {{ user.username }}!</h1>
+
+    <div class="card text-center w-100">
+
+        <div class="card-body">
+                
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-person" style="font-size: 1.5em;"></i>
+                    </span>
+                </div>
+                {{ form.first_name }}
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-person" style="font-size: 1.5em;"></i>
+                    </span>
+                </div>
+                {{ form.last_name }}
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-envelope-at" style="font-size: 1.5em;"></i>
+                    </span>
+                </div>
+                {{ form.email }}
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-chat-left-quote" style="font-size: 1.5em;"></i>
+                    </span>
+                </div>
+                {{ form.bio }}
+            </div>
+
+            <a href="" class="btn btn-secondary">Update</a>
+        <!--   <button class="btn btn-secondary">Update</button>-->
+        </div>
+    </div>
+
+
+<!--    {{form.as_p}}-->
+{% endblock content %}

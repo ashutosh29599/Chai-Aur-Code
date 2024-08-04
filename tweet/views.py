@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
+from django.contrib.auth.forms import UserChangeForm
 
 from .models import Tweet
-from .forms import TweetForm, UserRegistrationForm
+from .forms import TweetForm, UserRegistrationForm, UserProfileUpdateForm
 
 # Create your views here.
 
@@ -17,14 +18,19 @@ def tweet_list(request):
 
     return render(request, "tweet_list.html", {"tweets": tweets})
 
+
 def tweet_search(request):
     if request.method == "POST":
-        query = request.POST.get('search')
+        query = request.POST.get("search")
 
         if query:
             tweets = Tweet.objects.filter(text__icontains=query).order_by("-created_at")
-            return render(request, "tweet_list.html", {"tweets": tweets, "search": True, "query": query})
-        
+            return render(
+                request,
+                "tweet_list.html",
+                {"tweets": tweets, "search": True, "query": query},
+            )
+
     return redirect("tweet_list")
 
 
@@ -85,8 +91,13 @@ def register(request):
             user.set_password(form.cleaned_data["password1"])
             user.save()
             login(request, user)
-            return redirect('tweet_list')
+            return redirect("tweet_list")
     else:
         form = UserRegistrationForm()
-    
-    return render(request, 'registration/register.html', {"form": form})
+
+    return render(request, "registration/register.html", {"form": form})
+
+
+@login_required
+def profile(request):
+    return render(request, "profile.html", {"form": UserProfileUpdateForm})
