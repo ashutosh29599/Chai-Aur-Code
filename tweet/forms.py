@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Tweet
+from .models import Tweet, Profile
 
 
 class TweetForm(forms.ModelForm):
@@ -23,18 +23,6 @@ class UserRegistrationForm(UserCreationForm):
             "password1",
             "password2",
         )  # this is a tuple -- we are using a built-in model.
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
-    bio = models.TextField(max_length=240)
-
-    def __str__(self) -> str:
-        return self.user.username
 
 class UserProfileUpdateForm(forms.ModelForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "First Name"}))

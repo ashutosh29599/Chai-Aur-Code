@@ -100,7 +100,6 @@ def register(request):
     return render(request, "registration/register.html", {"form": form})
 
 
-@login_required
 def profile(request, user_id):
     profile_owner = get_object_or_404(User, pk=user_id)
     return render(request, "profile.html", {"form": UserProfileUpdateForm, "profile_owner": profile_owner})
