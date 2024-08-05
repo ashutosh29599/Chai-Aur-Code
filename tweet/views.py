@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User
 
 
-from .models import Tweet
+from .models import Tweet, Profile
 from .forms import TweetForm, UserRegistrationForm, UserProfileUpdateForm
 
 # Create your views here.
@@ -101,5 +101,18 @@ def register(request):
 
 
 def profile(request, user_id):
-    profile_owner = get_object_or_404(User, pk=user_id)
-    return render(request, "profile.html", {"form": UserProfileUpdateForm, "profile_owner": profile_owner})
+    # profile_owner = get_object_or_404(User, pk=user_id)
+    # profile_owner = get_object_or_404(Profile, pk=user_id)
+    
+    try:
+        profile_owner = Profile.objects.get(pk=user_id)
+    except Profile.DoesNotExist:
+        # return redirect("tweet_list")
+        profile_owner = Profile()
+
+    return render(request, "profile.html", {"profile_owner": profile_owner})
+
+
+@login_required
+def edit_profile(request, user_id):
+    return render(request, "edit_profile.html", {"form": UserProfileUpdateForm})

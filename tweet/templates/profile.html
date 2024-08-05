@@ -5,85 +5,97 @@
 {% endblock title %}
 
 {% block content %}
-    {% if profile_owner.id == request.user.id %}
+    {% if profile_owner.id and profile_owner.id == request.user.id %}
         <h1 class="text-center mt-4">Welcome to your profile, {{ user.username }}!</h1>
+    {% elif profile_owner.id %}
+        <h1 class="text-center mt-4">Welcome to {{ profile_owner.user.username }}'s profile!</h1>
+    {% else %}
+        <h1 class="text-center mt-4">Profile Page does not exist...</h1>
+    {% endif %}
 
-        <div class="container d-flex justify-content-center align-items-center">
-            <div class="card text-center">
-                <div class="card-body">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">
-                                <i class="bi bi-person" style="font-size: 1.5em;"></i>
-                            </span>
-                        </div>
-                        {{ form.first_name }}
+    <!-- {% if user.is_authenticated %}
+        <h1 class="text-center mt-4">Welcome to your profile, {{ user.username }}!</h1>
+    {% else %}
+
+    {% endif %}  -->
+
+    <!-- 
+        1) authenticated
+            a) go to own page
+                -> Welcome to your profile, user!
+            b) go to someone else's page
+                -> Welcome to this person's profile!
+        2) not authenticated
+            a) go to someone page
+                -> Welcome to this person's profile!
+    -->
+
+
+    <div class="container d-flex justify-content-center align-items-center mt-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-person" style="font-size: 1.2em;"></i>
+                    </span>
+                    <input class="form-control" type="text" value="{{profile_owner.first_name}} {{profile_owner.last_name}}" aria-label="Disabled input example" disabled readonly>
                     </div>
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">
-                                <i class="bi bi-person" style="font-size: 1.5em;"></i>
-                            </span>
-                        </div>
-                        {{ form.last_name }}
-                    </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-envelope-at" style="font-size: 1.2em;"></i>
+                    </span>
+                    <input class="form-control" type="text" value="{{ profile_owner.email }}" aria-label="Disabled input example" disabled readonly>
+                </div>
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">
-                                <i class="bi bi-envelope-at" style="font-size: 1.5em;"></i>
-                            </span>
-                        </div>
-                        {{ form.email }}
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">
-                                <i class="bi bi-chat-left-quote" style="font-size: 1.5em;"></i>
-                            </span>
-                        </div>
-                        {{ form.bio }}
-                    </div>
-
-                    <a href="" class="btn btn-secondary">Update</a>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-chat-left-quote" style="font-size: 1.2em;"></i>
+                    </span>
+                    <textarea class="form-control" aria-label="With textarea" disabled readonly>{{ profile_owner.bio }}</textarea>
                 </div>
             </div>
         </div>
-    {% else %}
-        <h1 class="text-center mt-4">Welcome to {{ profile_owner.username }}'s profile!</h1>
-        <!-- <div class="container d-flex justify-content-center align-items-center">
-            <div class="card text-center">
-                <div class="card-body">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">
-                                <i class="bi bi-person" style="font-size: 1.5em;"></i>
-                            </span>
-                        </div>
-                        <label for="name">FULL NAME</label>
-                    </div>
+    </div>
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">
-                                <i class="bi bi-envelope-at" style="font-size: 1.5em;"></i>
-                            </span>
-                        </div>
-                        <label for="email">EMAIL</label>
-                    </div>
+    {% if user.is_authenticated and profile_owner.id == request.user.id %}
+        <div class="text-center">
+            <a href="{% url 'edit_profile' request.user.id %}" class="btn btn-outline-secondary mt-4">Edit Profile</a>    
+        </div>
+    {% endif %} 
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">
-                                <i class="bi bi-chat-left-quote" style="font-size: 1.5em;"></i>
-                            </span>
-                        </div>
-                        <label for="bio">Bio</label>
+
+
+    <!-- <div class="container d-flex justify-content-center align-items-center">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">
+                            <i class="bi bi-person" style="font-size: 1.5em;"></i>
+                        </span>
                     </div>
+                    <label for="name">FULL NAME</label>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">
+                            <i class="bi bi-envelope-at" style="font-size: 1.5em;"></i>
+                        </span>
+                    </div>
+                    <label for="email">EMAIL</label>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">
+                            <i class="bi bi-chat-left-quote" style="font-size: 1.5em;"></i>
+                        </span>
+                    </div>
+                    <label for="bio">Bio</label>
                 </div>
             </div>
-        </div> -->
-    {% endif %}
+        </div>
+    </div> -->
 {% endblock content %}
