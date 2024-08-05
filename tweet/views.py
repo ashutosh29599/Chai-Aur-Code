@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.models import User
+
 
 from .models import Tweet
 from .forms import TweetForm, UserRegistrationForm, UserProfileUpdateForm
@@ -99,5 +101,6 @@ def register(request):
 
 
 @login_required
-def profile(request):
-    return render(request, "profile.html", {"form": UserProfileUpdateForm})
+def profile(request, user_id):
+    profile_owner = get_object_or_404(User, pk=user_id)
+    return render(request, "profile.html", {"form": UserProfileUpdateForm, "profile_owner": profile_owner})

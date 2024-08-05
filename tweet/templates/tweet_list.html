@@ -24,7 +24,9 @@
                     <img src="{{ tweet.photo.url }}" class="card-img-top" alt="...">
                 {% endif %}
                 <div class="card-body">
-                    <h5 class="card-title">{{ tweet.user.username }}</h5>
+                    <h5 class="card-title">
+                        <a href="{% url 'profile' tweet.user.id %}" class="btn btn-sm btn-info">{{ tweet.user.username }}</a>
+                    </h5>
                     <p class="card-text"><small>Created: {{ tweet.created_at }}</small></p>
                     <hr>
                     <p class="card-text">{{ tweet.text }}</p>

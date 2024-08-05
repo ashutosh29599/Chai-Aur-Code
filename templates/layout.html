@@ -52,13 +52,14 @@
                     {% csrf_token %}
                     <button class="btn btn-danger ms-2" type="submit">Logout</button>
                 </form>
+                <a href="{% url 'profile' user.id %}" class="btn">
+                    <i class="bi bi-person-circle ms-1 me-1" style="font-size: 1.5em;"></i>
+                </a>
             {% else %}
                 <a href="{% url 'register' %}" class="btn btn-primary mx-2">Register</a>
                 <a href="{% url 'login' %}" class="btn btn-success mx-2">Login</a>
             {% endif %}
-            <a href="{% url 'profile' %}" class="btn">
-                <i class="bi bi-person-circle ms-1 me-1" style="font-size: 1.5em;"></i>
-            </a>
+            
         </div>
     </div>
     </nav>
