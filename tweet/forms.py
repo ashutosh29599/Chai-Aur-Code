@@ -33,3 +33,21 @@ class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['first_name', 'last_name', 'email', 'bio']
+
+    def __init__(self, *args, **kwargs):
+        first_name = kwargs.pop('first_name', None)
+        last_name = kwargs.pop('last_name', None)
+        email = kwargs.pop('email', None)
+        bio = kwargs.pop('bio', None)
+        
+        super(UserProfileUpdateForm, self).__init__(*args, **kwargs)
+
+        if first_name:
+            self.fields['first_name'].widget.attrs.update({'placeholder': first_name, 'class': 'form-control'})
+        if last_name:
+            self.fields['last_name'].widget.attrs.update({'placeholder': last_name, 'class': 'form-control'})
+        if email:
+            self.fields['email'].widget.attrs.update({'placeholder': email, 'class': 'form-control'})
+        if bio:
+            self.fields['bio'].widget.attrs.update({'placeholder': bio, 'class': 'form-control'})
+

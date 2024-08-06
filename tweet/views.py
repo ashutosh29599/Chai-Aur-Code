@@ -110,9 +110,21 @@ def profile(request, user_id):
         # return redirect("tweet_list")
         profile_owner = Profile()
 
-    return render(request, "profile.html", {"profile_owner": profile_owner})
+    return render(request, "profile/profile.html", {"profile_owner": profile_owner})
 
 
 @login_required
 def edit_profile(request, user_id):
-    return render(request, "edit_profile.html", {"form": UserProfileUpdateForm})
+    try:
+        profile_owner = Profile.objects.get(pk=user_id)
+        form = UserProfileUpdateForm(
+            first_name=profile_owner.first_name,
+            last_name = profile_owner.last_name,
+            email = profile_owner.email,
+            bio = profile_owner.bio
+            )
+        return render(request, "profile/edit_profile.html", {"form": form, "profile_owner": profile_owner})
+    except Profile.DoesNotExist:
+        # return redirect("tweet_list")
+        return render(request, "profile/edit_profile.html", {"form": UserProfileUpdateForm})
+
