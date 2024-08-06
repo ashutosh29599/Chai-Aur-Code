@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
+from django.urls import reverse
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User
 
@@ -100,14 +101,10 @@ def register(request):
     return render(request, "registration/register.html", {"form": form})
 
 
-def profile(request, user_id):
-    # profile_owner = get_object_or_404(User, pk=user_id)
-    # profile_owner = get_object_or_404(Profile, pk=user_id)
-    
+def profile(request, user_id):  
     try:
         profile_owner = Profile.objects.get(pk=user_id)
     except Profile.DoesNotExist:
-        # return redirect("tweet_list")
         profile_owner = Profile()
 
     return render(request, "profile/profile.html", {"profile_owner": profile_owner})
@@ -117,14 +114,17 @@ def profile(request, user_id):
 def edit_profile(request, user_id):
     try:
         profile_owner = Profile.objects.get(pk=user_id)
-        form = UserProfileUpdateForm(
-            first_name=profile_owner.first_name,
-            last_name = profile_owner.last_name,
-            email = profile_owner.email,
-            bio = profile_owner.bio
-            )
-        return render(request, "profile/edit_profile.html", {"form": form, "profile_owner": profile_owner})
+
+        if request.method == "POST":
+            form = UserProfileUpdateForm(request.POST, instance=profile_owner)
+            if form.is_valid():
+                form.save()
+                return redirect(reverse("profile", kwargs={"user_id": user_id}))
+        else:
+            form = UserProfileUpdateForm(instance=profile_owner)
+
+            return render(request, "profile/edit_profile.html", {"form": form, "profile_owner": profile_owner})
+
     except Profile.DoesNotExist:
-        # return redirect("tweet_list")
         return render(request, "profile/edit_profile.html", {"form": UserProfileUpdateForm})
 

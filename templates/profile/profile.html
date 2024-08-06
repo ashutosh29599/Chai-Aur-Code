@@ -32,14 +32,21 @@
 
 
     <div class="container d-flex justify-content-center align-items-center mt-4">
-        <div class="card text-center">
+        <div class="card text-center" style="width: 40%;">
             <div class="card-body">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-at" style="font-size: 1.2em;"></i>
+                    </span>
+                    <input class="form-control" type="text" value="{{profile_owner.user.username}}" aria-label="Disabled input example" disabled readonly>
+                </div>
+
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
                         <i class="bi bi-person" style="font-size: 1.2em;"></i>
                     </span>
                     <input class="form-control" type="text" value="{{profile_owner.first_name}} {{profile_owner.last_name}}" aria-label="Disabled input example" disabled readonly>
-                    </div>
+                </div>
 
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
@@ -52,7 +59,7 @@
                     <span class="input-group-text" id="basic-addon1">
                         <i class="bi bi-chat-left-quote" style="font-size: 1.2em;"></i>
                     </span>
-                    <textarea class="form-control" aria-label="With textarea" disabled readonly>{{ profile_owner.bio }}</textarea>
+                    <textarea class="form-control" rows="4" style="height:100%;" aria-label="With textarea" disabled readonly>{{ profile_owner.bio }}</textarea>
                 </div>
             </div>
         </div>

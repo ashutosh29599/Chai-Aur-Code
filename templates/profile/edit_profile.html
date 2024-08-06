@@ -6,8 +6,15 @@
     <form method="post">
         {% csrf_token %}
         <div class="container d-flex justify-content-center align-items-center mt-4">
-            <div class="card text-center">
+            <div class="card text-center" style="width: 40%;">
                 <div class="card-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">
+                            <i class="bi bi-at" style="font-size: 1.2em;"></i>
+                        </span>
+                        <input class="form-control" type="text" value="{{profile_owner.user.username}}" aria-label="Disabled input example" disabled readonly>
+                    </div>
+
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="bi bi-person" style="font-size: 1.2em;"></i>
@@ -35,8 +42,8 @@
                         </span>
                         {{ form.bio }}
                     </div>
-
-                    <a href="" class="btn btn-secondary">Update</a>
+                    <a href="{% url 'profile' profile_owner.user.id %}" class="btn btn-outline-secondary">Back</a>                    
+                    <button class="btn btn-secondary">Update</button>
                 </div>
             </div>
         </div>

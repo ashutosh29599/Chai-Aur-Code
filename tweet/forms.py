@@ -24,30 +24,41 @@ class UserRegistrationForm(UserCreationForm):
             "password2",
         )  # this is a tuple -- we are using a built-in model.
 
+
 class UserProfileUpdateForm(forms.ModelForm):
-    first_name = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "First Name"}))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Last Name"}))
-    email = forms.EmailField(widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Email"}))
-    bio = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5, "placeholder": "Write a few words about yourself..."}))
+    first_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "First Name"}
+        )
+    )
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Last Name"}
+        )
+    )
+    email = forms.EmailField(
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Email"})
+    )
+    bio = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 5,
+                "placeholder": "Write a few words about yourself...",
+            }
+        )
+    )
 
     class Meta:
         model = Profile
-        fields = ['first_name', 'last_name', 'email', 'bio']
+        fields = ["first_name", "last_name", "email", "bio"]
 
-    def __init__(self, *args, **kwargs):
-        first_name = kwargs.pop('first_name', None)
-        last_name = kwargs.pop('last_name', None)
-        email = kwargs.pop('email', None)
-        bio = kwargs.pop('bio', None)
-        
-        super(UserProfileUpdateForm, self).__init__(*args, **kwargs)
-
-        if first_name:
-            self.fields['first_name'].widget.attrs.update({'placeholder': first_name, 'class': 'form-control'})
-        if last_name:
-            self.fields['last_name'].widget.attrs.update({'placeholder': last_name, 'class': 'form-control'})
-        if email:
-            self.fields['email'].widget.attrs.update({'placeholder': email, 'class': 'form-control'})
-        if bio:
-            self.fields['bio'].widget.attrs.update({'placeholder': bio, 'class': 'form-control'})
-
+    # The following is to prepopulated the data as placeholder.
+    # def __init__(self, *args, **kwargs):
+    #     super(UserProfileUpdateForm, self).__init__(*args, **kwargs)
+    #     instance = kwargs.get('instance')
+    #     if instance:
+    #         self.fields['first_name'].widget.attrs.update({'placeholder': instance.first_name, 'class': 'form-control'})
+    #         self.fields['last_name'].widget.attrs.update({'placeholder': instance.last_name, 'class': 'form-control'})
+    #         self.fields['email'].widget.attrs.update({'placeholder': instance.email, 'class': 'form-control'})
+    #         self.fields['bio'].widget.attrs.update({'placeholder': instance.bio, 'class': 'form-control'})
