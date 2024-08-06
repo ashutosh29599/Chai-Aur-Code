@@ -1,6 +1,6 @@
 # Chai aur Tweet
 
-Social Media App -- built by following along with [Chai aur Code YouTube Channel](https://www.youtube.com/@chaiaurcode)'s [video](https://www.youtube.com/watch?v=opzK3E4Xx6o&list=PLu71SKxNbfoDOf-6vAcKmazT92uLnWAgy&index=9).
+Social Media App -- built by following along with [Hitesh Choudhary](https://github.com/hiteshchoudhary) on his YouTube Channel, [Chai aur Code](https://www.youtube.com/@chaiaurcode's). The video can be found [here](https://www.youtube.com/watch?v=opzK3E4Xx6o&list=PLu71SKxNbfoDOf-6vAcKmazT92uLnWAgy&index=9).
 
 I extended the application by adding a search functionality.
 
