@@ -116,7 +116,7 @@ def edit_profile(request, user_id):
         profile_owner = Profile.objects.get(pk=user_id)
 
         if request.method == "POST":
-            form = UserProfileUpdateForm(request.POST, instance=profile_owner)
+            form = UserProfileUpdateForm(request.POST, instance=profile_owner)            
             if form.is_valid():
                 form.save()
                 return redirect(reverse("profile", kwargs={"user_id": user_id}))

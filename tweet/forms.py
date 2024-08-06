@@ -48,6 +48,7 @@ class UserProfileUpdateForm(forms.ModelForm):
             }
         )
     )
+    # photo = forms.ImageField()
 
     class Meta:
         model = Profile
