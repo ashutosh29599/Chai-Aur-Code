@@ -3,7 +3,7 @@
 {% block content %}
     <h1 class="text-center mt-4">Update your profile, {{ user.username }}!</h1>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="container d-flex justify-content-center align-items-center mt-4">
             <div class="card text-center" style="width: 40%;">
@@ -43,12 +43,12 @@
                         {{ form.bio }}
                     </div>
 
-                    <!-- <div class="input-group mb-3">
+                    <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="bi bi-camera-fill" style="font-size: 1.2em;"></i>
                         </span>
                         {{ form.photo }}
-                    </div> -->
+                    </div>
                     
                     <a href="{% url 'profile' profile_owner.user.id %}" class="btn btn-outline-secondary">Back</a>                    
                     <button class="btn btn-secondary">Update</button>

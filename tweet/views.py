@@ -112,13 +112,16 @@ def profile(request, user_id):
 
 @login_required
 def edit_profile(request, user_id):
+    print(f"Came to edit_profile with {user_id}")
     try:
         profile_owner = Profile.objects.get(pk=user_id)
 
         if request.method == "POST":
-            form = UserProfileUpdateForm(request.POST, instance=profile_owner)            
+            form = UserProfileUpdateForm(request.POST, request.FILES, instance=profile_owner)            
             if form.is_valid():
-                form.save()
+                print(f"Came to form.is_valid() with {user_id}")
+                profile = form.save(commit=False)
+                profile.save()
                 return redirect(reverse("profile", kwargs={"user_id": user_id}))
         else:
             form = UserProfileUpdateForm(instance=profile_owner)

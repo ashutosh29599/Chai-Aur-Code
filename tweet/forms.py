@@ -48,11 +48,11 @@ class UserProfileUpdateForm(forms.ModelForm):
             }
         )
     )
-    # photo = forms.ImageField()
+    photo = forms.ImageField()
 
     class Meta:
         model = Profile
-        fields = ["first_name", "last_name", "email", "bio"]
+        fields = ["first_name", "last_name", "email", "bio", "photo"]
 
     # The following is to prepopulated the data as placeholder.
     # def __init__(self, *args, **kwargs):
