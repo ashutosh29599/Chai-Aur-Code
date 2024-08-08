@@ -43,14 +43,14 @@
                     <span class="input-group-text" id="basic-addon1">
                         <i class="bi bi-at" style="font-size: 1.2em;"></i>
                     </span>
-                    <input class="form-control" type="text" value="{{profile_owner.user.username}}" aria-label="Disabled input example" disabled readonly>
+                    <input class="form-control" type="text" value="{{ profile_owner.user.username }}" aria-label="Disabled input example" disabled readonly>
                 </div>
 
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
                         <i class="bi bi-person" style="font-size: 1.2em;"></i>
                     </span>
-                    <input class="form-control" type="text" value="{{profile_owner.first_name}} {{profile_owner.last_name}}" aria-label="Disabled input example" disabled readonly>
+                    <input class="form-control" type="text" value=" {% if profile_owner.first_name %}{{profile_owner.first_name}}{% endif %}{% if profile_owner.last_name %} {{profile_owner.last_name}}{% endif %}" aria-label="Disabled input example" disabled readonly>
                 </div>
 
                 <div class="input-group mb-3">
@@ -64,50 +64,20 @@
                     <span class="input-group-text" id="basic-addon1">
                         <i class="bi bi-chat-left-quote" style="font-size: 1.2em;"></i>
                     </span>
-                    <textarea class="form-control" rows="4" style="height:100%;" aria-label="With textarea" disabled readonly>{{ profile_owner.bio }}</textarea>
+                    {% if profile_owner.bio %}
+                        <textarea class="form-control" rows="4" style="height:100%;" aria-label="With textarea" disabled readonly>{{ profile_owner.bio }}</textarea>
+                    {% else %}
+                        <textarea class="form-control" rows="4" style="height:100%;" aria-label="With textarea" placeholder="Your bio goes here..." disabled readonly></textarea>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
-    {% if user.is_authenticated and profile_owner.id == request.user.id %}
+    {% if user.is_authenticated and profile_owner.user.id == request.user.id %}
         <div class="text-center">
             <a href="{% url 'edit_profile' request.user.id %}" class="btn btn-outline-secondary mt-4">Edit Profile</a>    
         </div>
     {% endif %} 
 
-
-
-    <!-- <div class="container d-flex justify-content-center align-items-center">
-        <div class="card text-center">
-            <div class="card-body">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">
-                            <i class="bi bi-person" style="font-size: 1.5em;"></i>
-                        </span>
-                    </div>
-                    <label for="name">FULL NAME</label>
-                </div>
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">
-                            <i class="bi bi-envelope-at" style="font-size: 1.5em;"></i>
-                        </span>
-                    </div>
-                    <label for="email">EMAIL</label>
-                </div>
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">
-                            <i class="bi bi-chat-left-quote" style="font-size: 1.5em;"></i>
-                        </span>
-                    </div>
-                    <label for="bio">Bio</label>
-                </div>
-            </div>
-        </div>
-    </div> -->
 {% endblock content %}

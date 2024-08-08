@@ -93,6 +93,9 @@ def register(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data["password1"])
             user.save()
+
+            Profile.objects.create(user=user, email=user.email)
+            
             login(request, user)
             return redirect("tweet_list")
     else:
@@ -103,29 +106,29 @@ def register(request):
 
 def profile(request, user_id):  
     try:
-        profile_owner = Profile.objects.get(pk=user_id)
+        profile_owner = Profile.objects.get(user=user_id)
     except Profile.DoesNotExist:
-        profile_owner = Profile()
+        # create a new profile
+        print('creating....')
+        profile_owner = Profile(pk=user_id)
+        # return render(request, "profile/tweet_list.html")
 
     return render(request, "profile/profile.html", {"profile_owner": profile_owner})
 
 
 @login_required
 def edit_profile(request, user_id):
-    print(f"Came to edit_profile with {user_id}")
     try:
-        profile_owner = Profile.objects.get(pk=user_id)
+        profile_owner = Profile.objects.get(user=user_id)
 
         if request.method == "POST":
             form = UserProfileUpdateForm(request.POST, request.FILES, instance=profile_owner)            
             if form.is_valid():
-                print(f"Came to form.is_valid() with {user_id}")
                 profile = form.save(commit=False)
                 profile.save()
                 return redirect(reverse("profile", kwargs={"user_id": user_id}))
         else:
             form = UserProfileUpdateForm(instance=profile_owner)
-
             return render(request, "profile/edit_profile.html", {"form": form, "profile_owner": profile_owner})
 
     except Profile.DoesNotExist:

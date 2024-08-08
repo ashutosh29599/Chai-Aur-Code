@@ -27,19 +27,22 @@ class UserRegistrationForm(UserCreationForm):
 
 class UserProfileUpdateForm(forms.ModelForm):
     first_name = forms.CharField(
+        required=False,
         widget=forms.TextInput(
             attrs={"class": "form-control", "placeholder": "First Name"}
         )
     )
     last_name = forms.CharField(
+        required=False,
         widget=forms.TextInput(
             attrs={"class": "form-control", "placeholder": "Last Name"}
         )
     )
     email = forms.EmailField(
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Email"})
+        widget=forms.TextInput(attrs={"class": "form-control", "type": "email", "placeholder": "Email"})
     )
     bio = forms.CharField(
+        required=False,
         widget=forms.Textarea(
             attrs={
                 "class": "form-control",
@@ -48,7 +51,16 @@ class UserProfileUpdateForm(forms.ModelForm):
             }
         )
     )
-    photo = forms.ImageField()
+    photo = forms.ImageField(
+        label="Profile Photo",
+        required=False,
+        widget=forms.ClearableFileInput(
+            attrs={
+                "class": "form-control",
+            }
+        )
+    
+    )
 
     class Meta:
         model = Profile

@@ -1,0 +1,6 @@
+Fix Login Form
+Fix Registration Form 
+
+Fix Profile photo option in Update Profile page
+
+When user create the profile for the first time -- make bio and photo optional
