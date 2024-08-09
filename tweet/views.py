@@ -95,7 +95,7 @@ def register(request):
             user.save()
 
             Profile.objects.create(user=user, email=user.email)
-            
+
             login(request, user)
             return redirect("tweet_list")
     else:
@@ -104,14 +104,12 @@ def register(request):
     return render(request, "registration/register.html", {"form": form})
 
 
-def profile(request, user_id):  
+def profile(request, user_id):
     try:
         profile_owner = Profile.objects.get(user=user_id)
     except Profile.DoesNotExist:
         # create a new profile
-        print('creating....')
         profile_owner = Profile(pk=user_id)
-        # return render(request, "profile/tweet_list.html")
 
     return render(request, "profile/profile.html", {"profile_owner": profile_owner})
 
@@ -122,15 +120,22 @@ def edit_profile(request, user_id):
         profile_owner = Profile.objects.get(user=user_id)
 
         if request.method == "POST":
-            form = UserProfileUpdateForm(request.POST, request.FILES, instance=profile_owner)            
+            form = UserProfileUpdateForm(
+                request.POST, request.FILES, instance=profile_owner
+            )
             if form.is_valid():
                 profile = form.save(commit=False)
                 profile.save()
                 return redirect(reverse("profile", kwargs={"user_id": user_id}))
         else:
             form = UserProfileUpdateForm(instance=profile_owner)
-            return render(request, "profile/edit_profile.html", {"form": form, "profile_owner": profile_owner})
+            return render(
+                request,
+                "profile/edit_profile.html",
+                {"form": form, "profile_owner": profile_owner},
+            )
 
     except Profile.DoesNotExist:
-        return render(request, "profile/edit_profile.html", {"form": UserProfileUpdateForm})
-
+        return render(
+            request, "profile/edit_profile.html", {"form": UserProfileUpdateForm}
+        )

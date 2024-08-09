@@ -1,11 +1,17 @@
 {% extends "layout.html" %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-    <h2>Register!</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-primary">Register</button>
-    </form>
-    <p>Already have an account?<a href="{% url 'login' %}">Log in here!</a></p>
+    <div class="col-sm-8 container">
+        <h2 class="text-center mt-4">Register</h2>
+        <form method="post">
+            {% csrf_token %}
+            <!-- {{ form.as_p }} -->
+            {{ form | crispy }}
+            <button class="btn btn-primary">Register</button>
+        </form>
+        <br>
+        <p>Already have an account? <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">Log in here!</a></p>
+    </div>
 {% endblock content %}
