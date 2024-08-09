@@ -27,7 +27,11 @@
                     <h5 class="card-title">
                         <a href="{% url 'profile' tweet.user.id %}" class="btn btn-sm btn-info">{{ tweet.user.username }}</a>
                     </h5>
-                    <p class="card-text"><small>Created: {{ tweet.created_at }}</small></p>
+                    <p class="card-text"><small>Created: {{ tweet.created_at }}</small>
+                        {% if tweet.created_at|date:"Y-m-d H:i:s" != tweet.updated_at|date:"Y-m-d H:i:s" %}
+                            <small>Updated: {{tweet.updated_at}}</small>
+                        {% endif %}
+                    </p>
                     <hr>
                     <p class="card-text">{{ tweet.text }}</p>
                     {% if tweet.user == user %}
