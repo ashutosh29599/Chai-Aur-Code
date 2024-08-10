@@ -13,8 +13,7 @@ def profile(request, user_id):
     try:
         profile_owner = Profile.objects.get(user=user_id)
     except Profile.DoesNotExist:
-        # create a new profile
-        profile_owner = Profile(pk=user_id)
+        return redirect("tweet_list")
 
     return render(request, "profile/profile.html", {"profile_owner": profile_owner})
 
@@ -41,6 +40,4 @@ def edit_profile(request, user_id):
             )
 
     except Profile.DoesNotExist:
-        return render(
-            request, "profile/edit_profile.html", {"form": UserProfileUpdateForm}
-        )
+        return redirect("tweet_list")

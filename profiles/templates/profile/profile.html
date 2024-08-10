@@ -13,24 +13,6 @@
         <h1 class="text-center mt-4">Profile Page does not exist...</h1>
     {% endif %}
 
-    <!-- {% if user.is_authenticated %}
-        <h1 class="text-center mt-4">Welcome to your profile, {{ user.username }}!</h1>
-    {% else %}
-
-    {% endif %}  -->
-
-    <!-- 
-        1) authenticated
-            a) go to own page
-                -> Welcome to your profile, user!
-            b) go to someone else's page
-                -> Welcome to this person's profile!
-        2) not authenticated
-            a) go to someone page
-                -> Welcome to this person's profile!
-    -->
-
-
     <!-- <div class="container d-flex justify-content-center align-items-center mt-4"> -->
     <div class="container mt-4">
         {% if profile_owner.photo %}
@@ -73,8 +55,6 @@
             </div>
         </div>
     </div>
-    <!-- profile_owner -> {{profile_owner.user.id}}
-    request user -> {{request.user.id}} -->
 
     {% if user.is_authenticated and profile_owner.user.id == request.user.id %}
         <div class="text-center">
