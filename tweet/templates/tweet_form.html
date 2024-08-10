@@ -1,23 +1,41 @@
 {% extends "layout.html" %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
 
 {% block title %}
     Chai aur Tweet
 {% endblock title %}
 
 {% block content %}
-    <h1 class="text-center mt-4">Welcome to Chai's Django Project!</h1>
-
-    <h2>
-        {% if form.instance.pk %} 
-            Edit Tweet 
-        {% else %} 
-            Create Tweet 
-        {% endif %}
-    </h2>
-    <form method="post" enctype="multipart/form-data" class="form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-warning" type="Submit">Post Tweet</button>
-    </form>
-    <a href="{% url 'tweet_list' %}" class="btn btn-success mt-2">Back to Tweet List</a>
+    <!-- <h1 class="text-center mt-4">Welcome to Chai's Django Project!</h1> -->
+    <div class="d-flex justify-content-center">
+        <div class="card mt-4" style="width:50%;">
+            <div class="card-title text-center">
+                <h2 class="mt-4">
+                    {% if form.instance.pk %} 
+                        Edit Tweet 
+                    {% else %} 
+                        Create Tweet 
+                    {% endif %}
+                </h2>
+            </div>
+            <div class="card-body text-center">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-at" style="font-size: 1.2em;"></i>
+                    </span>
+                    <input class="form-control" type="text" value="{{ request.user.username }}" aria-label="Disabled input example" disabled readonly>
+                </div>
+                <form method="post" enctype="multipart/form-data" class="form">
+                    {% csrf_token %}
+                    <!-- {{ form.as_p }} -->
+                    {{ form | crispy }}
+                    <button class="btn btn-success" type="Submit">Post Tweet</button>
+                </form>
+            </div>  
+            <div class="card-footer d-flex justify-content-center">
+                <a href="{% url 'tweet_list' %}" class="btn btn-outline-secondary mt-2">Back to Tweet List</a>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
