@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 
-from tweet.models import Profile
+from profiles.models import Profile
 from .forms import UserRegistrationForm
 
 # Create your views here.

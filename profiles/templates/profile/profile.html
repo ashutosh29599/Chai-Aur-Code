@@ -73,6 +73,8 @@
             </div>
         </div>
     </div>
+    <!-- profile_owner -> {{profile_owner.user.id}}
+    request user -> {{request.user.id}} -->
 
     {% if user.is_authenticated and profile_owner.user.id == request.user.id %}
         <div class="text-center">
