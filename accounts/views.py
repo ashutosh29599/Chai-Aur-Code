@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.urls import reverse
+from django.contrib.auth import login, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 
 from profiles.models import Profile
 from .forms import UserRegistrationForm
@@ -23,3 +26,18 @@ def register(request):
         form = UserRegistrationForm()
 
     return render(request, "registration/register.html", {"form": form})
+
+
+@login_required
+def change_password(request):
+    if request.method == "POST":
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+
+        return redirect(reverse("profile", kwargs={"user_id": request.user.id}))
+    
+    form = PasswordChangeForm(request.user)
+    return render(request, "change_password/change_password.html", {"form": form})
