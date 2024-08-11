@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 from django.urls import reverse
 from django.contrib.auth.forms import UserChangeForm
@@ -29,8 +30,16 @@ def tweet_search(request):
 
         if query:
             tweets = Tweet.objects.filter(text__icontains=query).order_by("-created_at")
-            users_queried = User.objects.filter(username__icontains=query).order_by("username")
-            profiles_queried = Profile.objects.filter(user__username__icontains=query).order_by("user__username")
+            # users_queried = User.objects.filter(username__icontains=query).order_by("username")
+            # profiles_queried = Profile.objects.filter(user__username__icontains=query).order_by("user__username")
+            # users_and_profiles_queried = zip(users_queried, profiles_queried)
+
+            profiles_queried = Profile.objects.filter(
+                Q(user__username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query)
+            ).order_by('user__username')
+
+            users_queried = User.objects.filter(id__in=profiles_queried.values('user')).order_by('username')
+            
             users_and_profiles_queried = zip(users_queried, profiles_queried)
 
             return render(

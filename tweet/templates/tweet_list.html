@@ -40,12 +40,15 @@
                             <!-- <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> -->
                             
                             {% if profile_queried.photo %}
-                                <img src="{{ profile_queried.photo.url }}" class="card-img-top my-2" alt="">
+                                <img src="{{ profile_queried.photo.url }}" class="card-img my-2" alt="">
                             {% endif %}
 
-                            <p class="card-text"><a href="{% url 'profile' usr_queried.id %}" class="btn btn-outline-info">{{ usr_queried }}</a></p>
+                            <!-- <p class="card-text"><a href="{% url 'profile' usr_queried.id %}" class="btn btn-outline-info">{{ usr_queried }}</a></p> -->
                             <!-- <a href="#" class="card-link">Card link</a>
                             <a href="#" class="card-link">Another link</a> -->
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <a href="{% url 'profile' usr_queried.id %}" class="btn btn-outline-info">{{ usr_queried }}</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -77,24 +80,43 @@
     
         {% for tweet in tweets %}
             <div class="card" style="width: 18rem;">
-                {% if tweet.photo %}
+                <!-- {% if tweet.photo %}
                     <img src="{{ tweet.photo.url }}" class="card-img-top" alt="...">
-                {% endif %}
+                {% endif %} -->
                 <div class="card-body">
-                    <h5 class="card-title">
-                        <a href="{% url 'profile' tweet.user.id %}" class="btn btn-sm btn-info">{{ tweet.user.username }}</a>
-                    </h5>
-                    <p class="card-text"><small>Created: {{ tweet.created_at }}</small>
-                        {% if tweet.created_at|date:"Y-m-d H:i:s" != tweet.updated_at|date:"Y-m-d H:i:s" %}
-                            <small>Updated: {{tweet.updated_at}}</small>
+                    <div class="card-title d-flex justify-content-between align-items-center">
+                        <h5>
+                            <a href="{% url 'profile' tweet.user.id %}" class="btn btn-sm btn-outline-info">{{ tweet.user.username }}</a>
+                        </h5>
+                        {% if tweet.user == user %}
+                            <div>
+                                <a href="{% url 'tweet_edit' tweet.id %}" class="btn btn-sm btn-outline-light">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'tweet_delete' tweet.id %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
                         {% endif %}
+                    </div>
+
+                    <p class="card-text">
+                        <div class="text-body text-opacity-50">
+                            <small>Created: {{ tweet.created_at }}</small>
+                            {% if tweet.created_at|date:"Y-m-d H:i:s" != tweet.updated_at|date:"Y-m-d H:i:s" %}
+                                <small>Updated: {{tweet.updated_at}}</small>
+                            {% endif %}
+                        </div>
                     </p>
                     <hr>
                     <p class="card-text">{{ tweet.text }}</p>
-                    {% if tweet.user == user %}
+                    {% if tweet.photo %}
+                        <img src="{{ tweet.photo.url }}" class="card-img-bottom" alt="...">
+                    {% endif %}
+                    <!-- {% if tweet.user == user %}
                         <a href="{% url 'tweet_edit' tweet.id %}" class="btn btn-primary">Edit</a>
                         <a href="{% url 'tweet_delete' tweet.id %}" class="btn btn-danger">Delete</a>
-                    {% endif %}
+                    {% endif %} -->
                 </div>
             </div>
         {% endfor %}
