@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 
+
 {% block title %}
     Chai aur Tweet
 {% endblock title %}
@@ -8,14 +9,39 @@
     <h1 class="text-center mt-4">Welcome to Chai's!</h1>
     
     {% if search %}
-        <h3>
-            You searched for tweets containing "{{ query }}".
-        </h3>
         <a href="{% url 'tweet_list'%}" class="btn btn-secondary mb-4">Back</a>
-        <br>
+        <h3 class="mb-3">Users containing "{{query}}"</h3>
+
+        <div class="container row gap-3 text-center">
+            {% for usr_queried, profile_queried in users_and_profiles_queried %}
+                <div class="card" style="width: 15rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{% if profile_queried.first_name %}{{ profile_queried.first_name }}{% endif %} {% if profile_queried.last_name %}{{ profile_queried.last_name }}{% endif %}</h5>
+                        <!-- <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> -->
+                        
+                        {% if profile_queried.photo %}
+                            <img src="{{ profile_queried.photo.url }}" class="card-img-top my-2" alt="">
+                        {% endif %}
+
+                        <p class="card-text"><a href="{% url 'profile' usr_queried.id %}" class="btn btn-outline-info">{{ usr_queried }}</a></p>
+                        <!-- <a href="#" class="card-link">Card link</a>
+                        <a href="#" class="card-link">Another link</a> -->
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <br><hr><br>
+        <h3 class="mb-3">Tweets containing "{{ query }}"</h3>
+
+        <!-- <h3>
+            You searched for tweets containing "{{ query }}".
+        </h3> -->
+        
+        <!-- <br> -->
+    {% else %}
+        <a href="{% url 'tweet_create' %}" class="btn btn-primary mb-4">Create a Tweet!</a>
     {% endif %}
-    
-    <a href="{% url 'tweet_create' %}" class="btn btn-primary mb-4">Create a Tweet!</a>
 
     <div class="container row gap-3">
         {% for tweet in tweets %}

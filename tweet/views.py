@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 
 
 from .models import Tweet
+from profiles.models import Profile
 from .forms import TweetForm
 
 # Create your views here.
@@ -28,10 +29,14 @@ def tweet_search(request):
 
         if query:
             tweets = Tweet.objects.filter(text__icontains=query).order_by("-created_at")
+            users_queried = User.objects.filter(username__icontains=query).order_by("username")
+            profiles_queried = Profile.objects.filter(user__username__icontains=query).order_by("user__username")
+            users_and_profiles_queried = zip(users_queried, profiles_queried)
+
             return render(
                 request,
                 "tweet_list.html",
-                {"tweets": tweets, "search": True, "query": query},
+                {"tweets": tweets, "search": True, "query": query, "users_and_profiles_queried": users_and_profiles_queried},
             )
 
     return redirect("tweet_list")

@@ -1,10 +1,14 @@
 {% extends "layout.html" %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
 
 {% block content %}
     <h1 class="text-center mt-4">Update your profile, {{ user.username }}!</h1>
-
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        <!-- <div class="container" style="width:50%;">
+            {{form|crispy}}
+        </div> -->
         <div class="container d-flex justify-content-center align-items-center mt-4">
             <!-- <div class="card text-center" style="width: 60%;"> -->
             <div class="card text-center">
@@ -49,6 +53,7 @@
                             <i class="bi bi-camera-fill" style="font-size: 1.2em;"></i>
                         </span>
                         {{ form.photo }}
+                        <!-- {{ form.photo | as_crispy_field }} -->
                     </div>
                     
                     <a href="{% url 'profile' request.user.id %}" class="btn btn-outline-secondary">Back</a>                    
