@@ -9,30 +9,53 @@
     <h1 class="text-center mt-4">Welcome to Chai's!</h1>
     
     {% if search %}
-        <a href="{% url 'tweet_list'%}" class="btn btn-secondary mb-4">Back</a>
-        <h3 class="mb-3">Users containing "{{query}}"</h3>
+        <a href="{% url 'tweet_list'%}" class="btn btn-secondary">Back</a>
 
-        <div class="container row gap-3 text-center">
-            {% for usr_queried, profile_queried in users_and_profiles_queried %}
-                <div class="card" style="width: 15rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">{% if profile_queried.first_name %}{{ profile_queried.first_name }}{% endif %} {% if profile_queried.last_name %}{{ profile_queried.last_name }}{% endif %}</h5>
-                        <!-- <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> -->
-                        
-                        {% if profile_queried.photo %}
-                            <img src="{{ profile_queried.photo.url }}" class="card-img-top my-2" alt="">
-                        {% endif %}
+        <div class="d-flex justify-content-center">
+            <div class="container row " style="width:50%;">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <!-- <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#users-queried" aria-expanded="false" aria-controls="collapseExample">Users containing "{{query}}"</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#tweets-queried" aria-expanded="false" aria-controls="collapseExample">Tweets containing "{{query}}"</button> -->
+                    
+                    <input type="checkbox" class="btn-check" id="btncheck-users" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btncheck-users" data-bs-toggle="collapse" data-bs-target="#users-queried">Users containing "{{query}}"</label>
+                    
+                    <input type="checkbox" class="btn-check" id="btncheck-tweets" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btncheck-tweets" data-bs-toggle="collapse" data-bs-target="#tweets-queried">Tweets containing "{{query}}"</label>
+                </div>    
+            </div>
+        </div>
+            
+        
+        <!-- <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#users-queried" aria-expanded="false" aria-controls="collapseExample">
+            Users containing "{{query}}"
+        </button> -->
+        
+        <div class="container row gap-3 text-center collapse" id="users-queried">
+            <h3 class="my-3">Users containing "{{query}}"</h3>
+                {% for usr_queried, profile_queried in users_and_profiles_queried %}
+                    <div class="card" style="width: 15rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{% if profile_queried.first_name %}{{ profile_queried.first_name }}{% endif %} {% if profile_queried.last_name %}{{ profile_queried.last_name }}{% endif %}</h5>
+                            <!-- <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> -->
+                            
+                            {% if profile_queried.photo %}
+                                <img src="{{ profile_queried.photo.url }}" class="card-img-top my-2" alt="">
+                            {% endif %}
 
-                        <p class="card-text"><a href="{% url 'profile' usr_queried.id %}" class="btn btn-outline-info">{{ usr_queried }}</a></p>
-                        <!-- <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a> -->
+                            <p class="card-text"><a href="{% url 'profile' usr_queried.id %}" class="btn btn-outline-info">{{ usr_queried }}</a></p>
+                            <!-- <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a> -->
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
         </div>
 
-        <br><hr><br>
-        <h3 class="mb-3">Tweets containing "{{ query }}"</h3>
+        <hr>
+        <!-- <h3 class="mb-3">Tweets containing "{{ query }}"</h3> -->
+        <!-- <button class="btn btn-outline-primary btn-lg mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#tweets-queried" aria-expanded="false" aria-controls="collapseExample">
+            Tweets containing "{{ query }}"
+        </button> -->
 
         <!-- <h3>
             You searched for tweets containing "{{ query }}".
@@ -43,7 +66,15 @@
         <a href="{% url 'tweet_create' %}" class="btn btn-primary mb-4">Create a Tweet!</a>
     {% endif %}
 
-    <div class="container row gap-3">
+    {% if search %}
+        <div class="container row gap-3 collapse" id="tweets-queried">
+            <div class="text-center">
+                <h3 class="my-3">Tweets containing "{{ query }}"</h3>
+            </div>
+    {% else %}
+        <div class="container row gap-3">
+    {% endif %}
+    
         {% for tweet in tweets %}
             <div class="card" style="width: 18rem;">
                 {% if tweet.photo %}
