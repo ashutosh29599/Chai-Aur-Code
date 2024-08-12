@@ -25,11 +25,6 @@
                 </div>    
             </div>
         </div>
-            
-        
-        <!-- <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#users-queried" aria-expanded="false" aria-controls="collapseExample">
-            Users containing "{{query}}"
-        </button> -->
         
         <div class="container row gap-3 text-center collapse" id="users-queried">
             <h3 class="my-3">Users containing "{{query}}"</h3>
@@ -53,7 +48,6 @@
                     </div>
                 {% endfor %}
         </div>
-
         <hr>
         <!-- <h3 class="mb-3">Tweets containing "{{ query }}"</h3> -->
         <!-- <button class="btn btn-outline-primary btn-lg mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#tweets-queried" aria-expanded="false" aria-controls="collapseExample">
@@ -66,7 +60,26 @@
         
         <!-- <br> -->
     {% else %}
-        <a href="{% url 'tweet_create' %}" class="btn btn-primary mb-4">Create a Tweet!</a>
+    <div class="container">
+        <div class="row align-items-center mb-4">
+            <div class="col-auto">
+                <a href="{% url 'tweet_create' %}" class="btn btn-primary">Create a Tweet!</a>
+            </div>
+            <div class="col-auto ms-auto">
+                <form method="post" class="d-flex align-items-center gap-2">
+                    {% csrf_token %}
+                    <select class="form-select" name="sort_by" aria-label="Default select example">
+                        <option selected disabled>Sort by</option>
+                        <option value="latest_first" {% if sorting_criteria == "latest_first" %}selected{% endif %}>Latest first</option>
+                        <option value="oldest_first" {% if sorting_criteria == "oldest_first" %}selected{% endif %}>Oldest first</option>
+                        <option value="username_asc" {% if sorting_criteria == "username_asc" %}selected{% endif %}>Username ascending</option>
+                        <option value="username_desc" {% if sorting_criteria == "username_desc" %}selected{% endif %}>Username descending</option>
+                    </select>
+                    <button class="btn btn-outline-success" type="submit">Sort</button>
+                </form>
+            </div>
+        </div>
+    </div>
     {% endif %}
 
     {% if search %}
@@ -75,7 +88,7 @@
                 <h3 class="my-3">Tweets containing "{{ query }}"</h3>
             </div>
     {% else %}
-        <div class="container row gap-3">
+        <div class="container row gap-3 d-flex justify-content-between">
     {% endif %}
     
         {% for tweet in tweets %}
