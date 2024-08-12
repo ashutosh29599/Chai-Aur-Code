@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+
+
 {% block title %}
     Chai aur Tweet
 {% endblock title %}
@@ -13,8 +15,20 @@
         <h1 class="text-center mt-4">Profile Page does not exist...</h1>
     {% endif %}
 
+    <div class="d-flex justify-content-center my-3">
+        <div class="container row" style="width:50%;">
+            <div class="btn-group" role="group">
+                <input type="checkbox" class="btn-check" id="btncheck-profile" autocomplete="off" checked>
+                <label class="btn btn-outline-light" for="btncheck-profile" data-bs-toggle="collapse" data-bs-target="#profileCollapse">Profile</label>
+                
+                <input type="checkbox" class="btn-check" id="btncheck-tweets" autocomplete="off">
+                <label class="btn btn-outline-light" for="btncheck-tweets" data-bs-toggle="collapse" data-bs-target="#collapseTweets">Tweets</label>
+            </div>
+        </div>
+    </div>
+
     <!-- <div class="container d-flex justify-content-center align-items-center mt-4"> -->
-    <div class="container mt-4">
+    <div class="container mt-4 collapse show" id="profileCollapse">
         {% if profile_owner.photo %}
             <img src="{{ profile_owner.photo.url }}" class="rounded mx-auto d-block" alt="..." style="width:200px;">
         {% endif %}
@@ -42,6 +56,13 @@
                     <input class="form-control" type="text" value="{{ profile_owner.email }}" aria-label="Disabled input example" disabled readonly>
                 </div>
 
+                <!-- <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-calendar" style="font-size: 1.2em;"></i>
+                    </span>
+                    <input class="form-control" type="text" value="{{ profile_owner.user.date_joined }}" aria-label="Disabled input example" disabled readonly>
+                </div>
+                 -->
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
                         <i class="bi bi-chat-left-quote" style="font-size: 1.2em;"></i>
@@ -54,13 +75,76 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    {% if user.is_authenticated and profile_owner.user.id == request.user.id %}
+        {% if user.is_authenticated and profile_owner.user.id == request.user.id %}
         <div class="text-center">
             <a href="{% url 'edit_profile' request.user.id %}" class="btn btn-outline-secondary m-4">Edit Profile</a>
             <a href="{% url 'change_password' %}" class="btn btn-outline-secondary m-4">Change Password</a>
         </div>
     {% endif %} 
+    </div>
 
+    
+
+    {% if tweets %}
+        <div class="container row gap-3 mt-3 collapse" id="collapseTweets">
+            {% for tweet in tweets %}
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <div class="card-title d-flex justify-content-between align-items-center">
+                            <h5>
+                                <a href="{% url 'profile' tweet.user.id %}" class="btn btn-sm btn-outline-info">{{ tweet.user.username }}</a>
+                            </h5>
+                            {% if tweet.user == user %}
+                                <div>
+                                    <a href="{% url 'tweet_edit' tweet.id %}" class="btn btn-sm btn-outline-light">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'tweet_delete' tweet.id %}" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <p class="card-text">
+                            <div class="text-body text-opacity-50">
+                                <small>Created: {{ tweet.created_at }}</small>
+                                {% if tweet.created_at|date:"Y-m-d H:i:s" != tweet.updated_at|date:"Y-m-d H:i:s" %}
+                                    <small>Updated: {{tweet.updated_at}}</small>
+                                {% endif %}
+                            </div>
+                        </p>
+                        <hr>
+                        <p class="card-text">{{ tweet.text }}</p>
+                        {% if tweet.photo %}
+                            <img src="{{ tweet.photo.url }}" class="card-img-bottom" alt="...">
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const profileCheckbox = document.getElementById('btncheck-profile');
+        const tweetsCheckbox = document.getElementById('btncheck-tweets');
+
+
+        profileCheckbox.addEventListener('change', function () {
+            if (this.checked) {
+                tweetsCheckbox.checked = false;
+                document.getElementById('collapseTweets').classList.remove('show');
+            }
+        });
+    
+        tweetsCheckbox.addEventListener('change', function () {
+            if (this.checked) {
+                profileCheckbox.checked = false;
+                document.getElementById('profileCollapse').classList.remove('show');
+            }
+        });
+    });
+</script>
 {% endblock content %}

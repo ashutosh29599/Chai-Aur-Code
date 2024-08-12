@@ -6,16 +6,20 @@ from django.urls import reverse
 from .models import Profile
 from .forms import UserProfileUpdateForm
 
+from tweet.models import Tweet
+
 # Create your views here.
 
 
 def profile(request, user_id):
     try:
         profile_owner = Profile.objects.get(user=user_id)
+        tweets = Tweet.objects.get_tweets_for_user(user_id)
+
     except Profile.DoesNotExist:
         return redirect("tweet_list")
 
-    return render(request, "profile/profile.html", {"profile_owner": profile_owner})
+    return render(request, "profile/profile.html", {"profile_owner": profile_owner, "tweets": tweets})
 
 
 @login_required

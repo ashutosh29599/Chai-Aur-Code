@@ -1,3 +1,6 @@
-Beautify Create Tweet Form.
+Update README.
+Add versions.
+
+There are redundant columns in Profile -- email, first_name, last_name
 
 Add reset password
