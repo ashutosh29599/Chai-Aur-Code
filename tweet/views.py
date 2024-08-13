@@ -19,9 +19,21 @@ def index(request):
 
 
 def tweet_list(request):
-    tweets = Tweet.objects.all().order_by("-created_at")
+    if request.method == "POST":
+        sorting_criteria = request.POST.get("sort_by")
+        if sorting_criteria == "latest_first":
+            tweets = Tweet.objects.all().order_by("-created_at")
+        elif sorting_criteria == "oldest_first":
+            tweets = Tweet.objects.all().order_by("created_at")
+        elif sorting_criteria == "username_asc":
+            tweets = Tweet.objects.all().order_by("user__username")
+        elif sorting_criteria == "username_desc":
+            tweets = Tweet.objects.all().order_by("-user__username")
+    else:
+        tweets = Tweet.objects.all().order_by("-created_at")
+        sorting_criteria = "default"
 
-    return render(request, "tweet_list.html", {"tweets": tweets})
+    return render(request, "tweet_list.html", {"tweets": tweets, "sorting_criteria": sorting_criteria})
 
 
 def tweet_search(request):
