@@ -21,7 +21,7 @@ def register(request):
             Profile.objects.create(user=user, email=user.email)
 
             login(request, user)
-            return redirect("tweet_list")
+            return redirect("tweet_home")
     else:
         form = UserRegistrationForm()
 

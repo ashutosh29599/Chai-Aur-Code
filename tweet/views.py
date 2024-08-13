@@ -18,7 +18,7 @@ def index(request):
     return render(request, "index.html")
 
 
-def tweet_list(request):
+def tweet_home(request):
     if request.method == "POST":
         sorting_criteria = request.POST.get("sort_by")
         if sorting_criteria == "latest_first":
@@ -33,7 +33,7 @@ def tweet_list(request):
         tweets = Tweet.objects.all().order_by("-created_at")
         sorting_criteria = "default"
 
-    return render(request, "tweet_list.html", {"tweets": tweets, "sorting_criteria": sorting_criteria})
+    return render(request, "tweet_home.html", {"tweets": tweets, "sorting_criteria": sorting_criteria})
 
 
 def tweet_search(request):
@@ -54,13 +54,21 @@ def tweet_search(request):
             
             users_and_profiles_queried = zip(users_queried, profiles_queried)
 
+    #         return render(
+    #             request,
+    #             "tweet_home.html",
+    #             {"tweets": tweets, "search": True, "query": query, "users_and_profiles_queried": users_and_profiles_queried},
+    #         )
+
+    # return redirect("tweet_home")
+
             return render(
-                request,
-                "tweet_list.html",
+                request, 
+                "tweet_search.html", 
                 {"tweets": tweets, "search": True, "query": query, "users_and_profiles_queried": users_and_profiles_queried},
             )
-
-    return redirect("tweet_list")
+    
+    return redirect("tweet_search")
 
 
 @login_required
@@ -73,7 +81,7 @@ def tweet_create(request):
             tweet.user = request.user
             tweet.save()
 
-            return redirect("tweet_list")
+            return redirect("tweet_home")
     else:
         form = TweetForm()
 
@@ -92,7 +100,7 @@ def tweet_edit(request, tweet_id):
             tweet.user = request.user
             tweet.save()
 
-            return redirect("tweet_list")
+            return redirect("tweet_home")
     else:
         form = TweetForm(instance=tweet)
 
@@ -106,6 +114,6 @@ def tweet_delete(request, tweet_id):
     if request.method == "POST":
         tweet.delete()
 
-        return redirect("tweet_list")
+        return redirect("tweet_home")
 
     return render(request, "tweet_confirm_delete.html", {"tweet": tweet})

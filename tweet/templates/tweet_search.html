@@ -1,5 +1,13 @@
+{% extends "layout.html" %}
 
-    <a href="{% url 'tweet_list'%}" class="btn btn-secondary">Back</a>
+
+{% block title %}
+    Chai aur Tweet
+{% endblock title %}
+
+{% block content %}
+    <h1 class="text-center mt-4">Search Results</h1>
+    <a href="{% url 'tweet_home'%}" class="btn btn-secondary">Back</a>
 
     <div class="d-flex justify-content-center">
         <div class="container row" style="width:50%;">
@@ -17,7 +25,7 @@
     </div>
     
     <div class="container row gap-3 text-center collapse" id="users-queried">
-        <h3 class="my-3">Users containing "{{query}}"</h3>
+        <h3 class="mt-3">Users containing "{{query}}"</h3>
 
         {% for usr_queried, profile_queried in users_and_profiles_queried %}
             <div class="card" style="width: 15rem;">
@@ -28,10 +36,6 @@
                     {% if profile_queried.photo %}
                         <img src="{{ profile_queried.photo.url }}" class="card-img my-2" alt="">
                     {% endif %}
-
-                    <!-- <p class="card-text"><a href="{% url 'profile' usr_queried.id %}" class="btn btn-outline-info">{{ usr_queried }}</a></p> -->
-                    <!-- <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a> -->
                 </div>
                 <div class="card-footer bg-transparent border-0">
                     <a href="{% url 'profile' usr_queried.id %}" class="btn btn-outline-info">{{ usr_queried }}</a>
@@ -44,4 +48,8 @@
     <div class="container row gap-3 collapse" id="tweets-queried">
         <div class="text-center"> 
             <h3 class="my-3">Tweets containing "{{ query }}"</h3>
-        </div>
+            {% include "tweet_list.html" %}
+        </div> 
+    </div>
+
+{% endblock content %}

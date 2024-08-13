@@ -17,7 +17,7 @@ def profile(request, user_id):
         tweets = Tweet.objects.get_tweets_for_user(user_id)
 
     except Profile.DoesNotExist:
-        return redirect("tweet_list")
+        return redirect("tweet_home")
 
     return render(request, "profile/profile.html", {"profile_owner": profile_owner, "tweets": tweets})
 
@@ -44,4 +44,4 @@ def edit_profile(request, user_id):
             )
 
     except Profile.DoesNotExist:
-        return redirect("tweet_list")
+        return redirect("tweet_home")
