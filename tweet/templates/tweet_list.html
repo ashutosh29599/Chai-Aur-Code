@@ -41,6 +41,9 @@
                         <div class="card-title d-flex justify-content-between align-items-center">
                             <h5>
                                 <a href="{% url 'profile' tweet.user.id %}" class="btn btn-sm btn-outline-info">{{ tweet.user.username }}</a>
+                                {% if tweet.user.is_staff %}
+                                    <a href="#" class="btn btn-sm btn-outline-warning">admin</a>
+                                {% endif %}
                             </h5>
                             {% if tweet.user == user %}
                                 <div>
