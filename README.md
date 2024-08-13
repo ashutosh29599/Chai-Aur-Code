@@ -21,8 +21,8 @@ Go to the project directory
 
 Create a Python virtual environment (Can be created outside of the project directory as well)
 
-```bash
-  pip -m venv venv
+```python
+  python -m venv venv
 ```
 
 Install dependencies
