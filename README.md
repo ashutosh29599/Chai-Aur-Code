@@ -25,6 +25,12 @@ Create a Python virtual environment (Can be created outside of the project direc
   python -m venv venv
 ```
 
+Activate the virtual environment
+
+```python
+  source venv/bin/activate
+```
+
 Install dependencies
 
 ```bash
