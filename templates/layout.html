@@ -46,7 +46,7 @@
                 <a class="nav-link disabled" aria-disabled="true">Disabled</a>
                 </li>-->
             </ul>
-            <form class="d-flex" role="search" method="post" action="{% url 'search' %}">
+            <form class="d-flex" role="search" method="post" action="{% url 'tweet_search' %}">
                 {% csrf_token %}
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
                 <!-- <div class="btn-group">

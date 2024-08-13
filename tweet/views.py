@@ -18,20 +18,26 @@ def index(request):
     return render(request, "index.html")
 
 
+def tweet_fetch_by_sorting(sorting_criteria):
+    sorting_map = {
+        "latest_first": "-created_at",
+        "oldest_first": "created_at",
+        "username_asc": "user__username",
+        "username_desc": "-user__username"
+    }
+
+    tweets = Tweet.objects.all().order_by(sorting_map.get(sorting_criteria, "-created_at"))
+
+    return tweets
+    
+
 def tweet_home(request):
     if request.method == "POST":
-        sorting_criteria = request.POST.get("sort_by")
-        if sorting_criteria == "latest_first":
-            tweets = Tweet.objects.all().order_by("-created_at")
-        elif sorting_criteria == "oldest_first":
-            tweets = Tweet.objects.all().order_by("created_at")
-        elif sorting_criteria == "username_asc":
-            tweets = Tweet.objects.all().order_by("user__username")
-        elif sorting_criteria == "username_desc":
-            tweets = Tweet.objects.all().order_by("-user__username")
+        sorting_criteria = request.POST.get("sort_by", "default")
     else:
-        tweets = Tweet.objects.all().order_by("-created_at")
         sorting_criteria = "default"
+
+    tweets = tweet_fetch_by_sorting(sorting_criteria)
 
     return render(request, "tweet_home.html", {"tweets": tweets, "sorting_criteria": sorting_criteria})
 
@@ -41,11 +47,9 @@ def tweet_search(request):
         query = request.POST.get("search")
 
         if query:
-            tweets = Tweet.objects.filter(text__icontains=query).order_by("-created_at")
-            # users_queried = User.objects.filter(username__icontains=query).order_by("username")
-            # profiles_queried = Profile.objects.filter(user__username__icontains=query).order_by("user__username")
-            # users_and_profiles_queried = zip(users_queried, profiles_queried)
-
+            # tweets = Tweet.objects.filter(text__icontains=query).order_by("-created_at")
+            tweets = tweet_fetch_by_sorting("default")
+            
             profiles_queried = Profile.objects.filter(
                 Q(user__username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query)
             ).order_by('user__username')
@@ -54,21 +58,19 @@ def tweet_search(request):
             
             users_and_profiles_queried = zip(users_queried, profiles_queried)
 
-    #         return render(
-    #             request,
-    #             "tweet_home.html",
-    #             {"tweets": tweets, "search": True, "query": query, "users_and_profiles_queried": users_and_profiles_queried},
-    #         )
-
-    # return redirect("tweet_home")
-
             return render(
                 request, 
                 "tweet_search.html", 
-                {"tweets": tweets, "search": True, "query": query, "users_and_profiles_queried": users_and_profiles_queried},
+                {
+                    "tweets": tweets, 
+                    "search": True, 
+                    "query": query, 
+                    "users_and_profiles_queried": users_and_profiles_queried,
+                    "users_count": len(users_queried)
+                    },
             )
     
-    return redirect("tweet_search")
+    return redirect("tweet_home")
 
 
 @login_required

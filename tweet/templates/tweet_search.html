@@ -16,10 +16,10 @@
                 <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#tweets-queried" aria-expanded="false" aria-controls="collapseExample">Tweets containing "{{query}}"</button> -->
                 
                 <input type="checkbox" class="btn-check" id="btncheck-users" autocomplete="off">
-                <label class="btn btn-outline-primary" for="btncheck-users" data-bs-toggle="collapse" data-bs-target="#users-queried">Users containing "{{query}}"</label>
+                <label class="btn btn-outline-primary" for="btncheck-users" data-bs-toggle="collapse" data-bs-target="#users-queried">Users containing "{{query}}" ({{users_count}})</label>
                 
                 <input type="checkbox" class="btn-check" id="btncheck-tweets" autocomplete="off">
-                <label class="btn btn-outline-primary" for="btncheck-tweets" data-bs-toggle="collapse" data-bs-target="#tweets-queried">Tweets containing "{{query}}"</label>
+                <label class="btn btn-outline-primary" for="btncheck-tweets" data-bs-toggle="collapse" data-bs-target="#tweets-queried">Tweets containing "{{query}}" ({{tweets|length}})</label>
             </div>    
         </div>
     </div>
@@ -49,7 +49,7 @@
         <div class="text-center"> 
             <h3 class="my-3">Tweets containing "{{ query }}"</h3>
             {% include "tweet_list.html" %}
-        </div> 
+        </div>
     </div>
 
 {% endblock content %}
