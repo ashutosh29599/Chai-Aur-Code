@@ -47,8 +47,8 @@ def tweet_search(request):
         query = request.POST.get("search")
 
         if query:
-            # tweets = Tweet.objects.filter(text__icontains=query).order_by("-created_at")
-            tweets = tweet_fetch_by_sorting("default")
+            tweets = Tweet.objects.filter(text__icontains=query).order_by("-created_at")
+            # tweets = tweet_fetch_by_sorting("default")
             
             profiles_queried = Profile.objects.filter(
                 Q(user__username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query)
