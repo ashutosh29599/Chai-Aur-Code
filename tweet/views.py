@@ -49,24 +49,54 @@ def tweet_home(request):
 def tweet_search(request):
     if (request.method == "POST" or request.headers.get("x-requested-with") == "XMLHttpRequest"):
         query = request.POST.get("search")
-        sorting_criteria = request.POST.get("sort_by", "default")
+        tweet_sorting_criteria = request.POST.get("sort_by", "default")
+        user_sorting_criteria = request.POST.get("sort_by_user", "default")
+        sort_element = request.POST.get("sort_element", "users")
+
+        profile_sorting_map = {
+            "default": "user__username",
+            "username_asc": "user__username",
+            "username_desc": "-user__username",
+            "oldest_ac_first": "user__date_joined",
+            "youngest_ac_first": "-user__date_joined",
+        }
+
+        user_sorting_map = {
+            "default": "username",
+            "username_asc": "username",
+            "username_desc": "-username",
+            "oldest_ac_first": "date_joined",
+            "youngest_ac_first": "-date_joined",
+        }
 
         if query:
-            sorting_map = get_tweet_sorting_map()
-            tweets = Tweet.objects.filter(text__icontains=query).order_by(sorting_map[sorting_criteria])
+            tweet_sorting_map = get_tweet_sorting_map()
+            tweets = Tweet.objects.filter(text__icontains=query).order_by(tweet_sorting_map[tweet_sorting_criteria])
 
             profiles_queried = Profile.objects.filter(
                 Q(user__username__icontains=query)
                 | Q(first_name__icontains=query)
                 | Q(last_name__icontains=query)
-            ).order_by("user__username")
+            ).order_by(profile_sorting_map[user_sorting_criteria])
 
-            users_queried = User.objects.filter(id__in=profiles_queried.values("user")).order_by("username")
+            users_queried = User.objects.filter(id__in=profiles_queried.values("user")).order_by(user_sorting_map[user_sorting_criteria])
 
             users_and_profiles_queried = zip(users_queried, profiles_queried)
 
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
-                return render(request, "partials/tweet_list.html", {"tweets": tweets})
+                if sort_element == "users":
+                    template_to_render = "partials/tweet_user_list.html"
+                else:
+                    template_to_render = "partials/tweet_list.html"
+
+                return render(request, 
+                              template_to_render, 
+                              {
+                                  "tweets": tweets, 
+                                  "users_and_profiles_queried": users_and_profiles_queried,
+                                  "users_count": len(users_queried)
+                            },
+                        )
 
             return render(
                 request,

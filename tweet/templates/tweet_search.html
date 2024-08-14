@@ -7,7 +7,7 @@
 
 {% block content %}
     <h1 class="text-center mt-4">Search Results</h1>
-    <a href="{% url 'tweet_home'%}" class="btn btn-secondary">Back</a>
+    {% comment %} <a href="{% url 'tweet_home'%}" class="btn btn-secondary">Back</a> {% endcomment %}
 
     <input type="hidden" name="query" id="query" value="{{ query }}">
 
@@ -26,24 +26,27 @@
         </div>
     </div>
     
-    <div class="container row gap-3 text-center collapse" id="users-queried">
-        <h3 class="mt-3">Users containing "{{query}}"</h3>
+    <div class="container">
+        <div class="row align-items-center gap-3 collapse" id="users-queried">
+            <div class="col-12 d-flex align-items-center justify-content-between">
+                <h3 class="mt-3">Users containing "{{query}}"</h3>
 
-        {% for usr_queried, profile_queried in users_and_profiles_queried %}
-            <div class="card" style="width: 15rem;">
-                <div class="card-body">
-                    <h5 class="card-title">{% if profile_queried.first_name %}{{ profile_queried.first_name }}{% endif %} {% if profile_queried.last_name %}{{ profile_queried.last_name }}{% endif %}</h5>
-                    <!-- <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6> -->
-                    
-                    {% if profile_queried.photo %}
-                        <img src="{{ profile_queried.photo.url }}" class="card-img my-2" alt="">
-                    {% endif %}
-                </div>
-                <div class="card-footer bg-transparent border-0">
-                    <a href="{% url 'profile' usr_queried.id %}" class="btn btn-outline-info">{{ usr_queried }}</a>
-                </div>
+                <form method="post" class="d-flex align-items-center gap-2">
+                    {% csrf_token %}
+                    <select class="form-select" name="sort_by_user" id="sort-by-user" aria-label="Sort by user">
+                        <option selected disabled>Sort by</option>
+                        <option value="username_asc" {% if sorting_criteria == "username_asc" %}selected{% endif %}>Username ascending</option>
+                        <option value="username_desc" {% if sorting_criteria == "username_desc" %}selected{% endif %}>Username descending</option>
+                        <option value="oldest_ac_first" {% if sorting_criteria == "oldest_ac_first" %}selected{% endif %}>Oldest accounts first</option>
+                        <option value="youngest_ac_first" {% if sorting_criteria == "youngest_ac_first" %}selected{% endif %}>Youngest accounts first</option>
+                    </select>
+                </form>
             </div>
-        {% endfor %}
+
+            <div id="posts-container-users" class="col-12">
+                {% include "partials/tweet_user_list.html" %}
+            </div>
+        </div>
     </div>
     <hr>
 
@@ -60,47 +63,47 @@
         </div>
     </div>
 
-    <!-- <div class="container row gap-3 collapse" id="tweets-queried">
-        <div class="text-center">
-            <h3 class="my-3">Tweets containing "{{ query }}"</h3>
-            <div class="col-auto ms-auto">
-                <form method="post" class="d-flex align-items-center gap-2">
-                    {% csrf_token %}
-                    <select class="form-select" name="sort_by" id="sort-by" aria-label="Default select example">
-                        <option selected disabled>Sort by</option>
-                        <option value="latest_first" {% if sorting_criteria == "latest_first" %}selected{% endif %}>Latest first</option>
-                        <option value="oldest_first" {% if sorting_criteria == "oldest_first" %}selected{% endif %}>Oldest first</option>
-                        <option value="username_asc" {% if sorting_criteria == "username_asc" %}selected{% endif %}>Username ascending</option>
-                        <option value="username_desc" {% if sorting_criteria == "username_desc" %}selected{% endif %}>Username descending</option>
-                    </select>
-                </form>
-            </div>
-            <div id="posts-container">
-                {% include "partials/tweet_list.html" %}        
-            </div>
-        </div>
-    </div> -->
-
     <script>
         $(document).ready(function() {
             $('#sort-by').change(function() {
                 var sortingCriteria = $(this).val();
                 var query = $('#query').val();
-
-                console.log("in js");
-                console.log(query);
                 
                 $.ajax({
                     url: "{% url 'tweet_search' %}",
                     type: "POST",
                     data: {
                         'search': query,
+                        'sort_element': 'posts',
                         'sort_by': sortingCriteria,
                         'csrfmiddlewaretoken': '{{ csrf_token }}'
                     },
                     success: function(data) {
-                        console.log("success...");
                         $('#posts-container').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            $('#sort-by-user').change(function() {
+                var sortingCriteria = $(this).val();
+                var query = $('#query').val();
+                
+                $.ajax({
+                    url: "{% url 'tweet_search' %}",
+                    type: "POST",
+                    data: {
+                        'search': query,
+                        'sort_element': 'users',
+                        'sort_by_user': sortingCriteria,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        $('#posts-container-users').html(data);
                     },
                     error: function(xhr, status, error) {
                         console.error("AJAX Error:", status, error);
