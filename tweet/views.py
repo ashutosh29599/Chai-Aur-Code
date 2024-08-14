@@ -18,58 +18,68 @@ def index(request):
     return render(request, "index.html")
 
 
-def tweet_fetch_by_sorting(sorting_criteria):
+def get_tweet_sorting_map():
     sorting_map = {
+        "default": "-created_at",
         "latest_first": "-created_at",
         "oldest_first": "created_at",
         "username_asc": "user__username",
-        "username_desc": "-user__username"
+        "username_desc": "-user__username",
     }
 
-    tweets = Tweet.objects.all().order_by(sorting_map.get(sorting_criteria, "-created_at"))
+    return sorting_map
 
-    return tweets
-    
 
 def tweet_home(request):
-    if request.method == "POST":
-        sorting_criteria = request.POST.get("sort_by", "default")
-    else:
-        sorting_criteria = "default"
+    sorting_map = get_tweet_sorting_map()
+    sorting_criteria = request.POST.get("sort_by", "default")
+    tweets = Tweet.objects.all().order_by(sorting_map[sorting_criteria])
 
-    tweets = tweet_fetch_by_sorting(sorting_criteria)
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        # Render the partial template if this is an AJAX request
+        return render(request, "partials/tweet_list.html", {"tweets": tweets})
 
-    return render(request, "tweet_home.html", {"tweets": tweets, "sorting_criteria": sorting_criteria})
+    return render(
+        request,
+        "tweet_home.html",
+        {"tweets": tweets, "sorting_criteria": sorting_criteria},
+    )
 
 
 def tweet_search(request):
-    if request.method == "POST":
+    if (request.method == "POST" or request.headers.get("x-requested-with") == "XMLHttpRequest"):
         query = request.POST.get("search")
+        sorting_criteria = request.POST.get("sort_by", "default")
 
         if query:
-            tweets = Tweet.objects.filter(text__icontains=query).order_by("-created_at")
-            # tweets = tweet_fetch_by_sorting("default")
-            
-            profiles_queried = Profile.objects.filter(
-                Q(user__username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query)
-            ).order_by('user__username')
+            sorting_map = get_tweet_sorting_map()
+            tweets = Tweet.objects.filter(text__icontains=query).order_by(sorting_map[sorting_criteria])
 
-            users_queried = User.objects.filter(id__in=profiles_queried.values('user')).order_by('username')
-            
+            profiles_queried = Profile.objects.filter(
+                Q(user__username__icontains=query)
+                | Q(first_name__icontains=query)
+                | Q(last_name__icontains=query)
+            ).order_by("user__username")
+
+            users_queried = User.objects.filter(id__in=profiles_queried.values("user")).order_by("username")
+
             users_and_profiles_queried = zip(users_queried, profiles_queried)
 
+            if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                return render(request, "partials/tweet_list.html", {"tweets": tweets})
+
             return render(
-                request, 
-                "tweet_search.html", 
+                request,
+                "tweet_search.html",
                 {
-                    "tweets": tweets, 
-                    "search": True, 
-                    "query": query, 
+                    "tweets": tweets,
+                    "search": True,
+                    "query": query,
                     "users_and_profiles_queried": users_and_profiles_queried,
-                    "users_count": len(users_queried)
-                    },
+                    "users_count": len(users_queried),
+                },
             )
-    
+
     return redirect("tweet_home")
 
 

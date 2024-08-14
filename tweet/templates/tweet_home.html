@@ -14,22 +14,37 @@
                 <a href="{% url 'tweet_create' %}" class="btn btn-outline-primary">Create a Tweet!</a>
             </div>
             <div class="col-auto ms-auto">
-                <form method="post" class="d-flex align-items-center gap-2">
-                    {% csrf_token %}
-                    <select class="form-select" name="sort_by" aria-label="Default select example">
-                        <option selected disabled>Sort by</option>
-                        <option value="latest_first" {% if sorting_criteria == "latest_first" %}selected{% endif %}>Latest first</option>
-                        <option value="oldest_first" {% if sorting_criteria == "oldest_first" %}selected{% endif %}>Oldest first</option>
-                        <option value="username_asc" {% if sorting_criteria == "username_asc" %}selected{% endif %}>Username ascending</option>
-                        <option value="username_desc" {% if sorting_criteria == "username_desc" %}selected{% endif %}>Username descending</option>
-                    </select>
-                    <button class="btn btn-outline-success" type="submit">Sort</button>
-                </form>
+                {% include "partials/tweet_sorting_options.html" %}
             </div>
         </div>
     </div>
     
-    {% include "tweet_list.html" %}
+    <div id="posts-container">
+        {% include "partials/tweet_list.html" %}        
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#sort-by').change(function() {
+                var sortingCriteria = $(this).val();
+                
+                $.ajax({
+                    url: "{% url 'tweet_home' %}",
+                    type: "POST",
+                    data: {
+                        'sort_by': sortingCriteria,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        $('#posts-container').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                    }
+                });
+            });
+        });
+        </script>
 
 
 {% endblock content %}

@@ -9,6 +9,8 @@
     <h1 class="text-center mt-4">Search Results</h1>
     <a href="{% url 'tweet_home'%}" class="btn btn-secondary">Back</a>
 
+    <input type="hidden" name="query" id="query" value="{{ query }}">
+
     <div class="d-flex justify-content-center">
         <div class="container row" style="width:50%;">
             <div class="btn-group" role="group" aria-label="Basic outlined example">
@@ -45,11 +47,67 @@
     </div>
     <hr>
 
-    <div class="container row gap-3 collapse" id="tweets-queried">
-        <div class="text-center"> 
-            <h3 class="my-3">Tweets containing "{{ query }}"</h3>
-            {% include "tweet_list.html" %}
+    <div class="container">
+        <div class="row align-items-center gap-3 collapse" id="tweets-queried">
+            <div class="col-12 d-flex align-items-center justify-content-between">
+                <h3 class="my-3">Tweets containing "{{ query }}"</h3>
+                {% include "partials/tweet_sorting_options.html" %}
+            </div>
+            <!-- Posts container -->
+            <div id="posts-container" class="col-12">
+                {% include "partials/tweet_list.html" %}
+            </div>
         </div>
     </div>
+
+    <!-- <div class="container row gap-3 collapse" id="tweets-queried">
+        <div class="text-center">
+            <h3 class="my-3">Tweets containing "{{ query }}"</h3>
+            <div class="col-auto ms-auto">
+                <form method="post" class="d-flex align-items-center gap-2">
+                    {% csrf_token %}
+                    <select class="form-select" name="sort_by" id="sort-by" aria-label="Default select example">
+                        <option selected disabled>Sort by</option>
+                        <option value="latest_first" {% if sorting_criteria == "latest_first" %}selected{% endif %}>Latest first</option>
+                        <option value="oldest_first" {% if sorting_criteria == "oldest_first" %}selected{% endif %}>Oldest first</option>
+                        <option value="username_asc" {% if sorting_criteria == "username_asc" %}selected{% endif %}>Username ascending</option>
+                        <option value="username_desc" {% if sorting_criteria == "username_desc" %}selected{% endif %}>Username descending</option>
+                    </select>
+                </form>
+            </div>
+            <div id="posts-container">
+                {% include "partials/tweet_list.html" %}        
+            </div>
+        </div>
+    </div> -->
+
+    <script>
+        $(document).ready(function() {
+            $('#sort-by').change(function() {
+                var sortingCriteria = $(this).val();
+                var query = $('#query').val();
+
+                console.log("in js");
+                console.log(query);
+                
+                $.ajax({
+                    url: "{% url 'tweet_search' %}",
+                    type: "POST",
+                    data: {
+                        'search': query,
+                        'sort_by': sortingCriteria,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        console.log("success...");
+                        $('#posts-container').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                    }
+                });
+            });
+        });
+        </script>
 
 {% endblock content %}
