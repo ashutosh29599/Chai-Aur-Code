@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    Chai aur Tweet
+{% endblock title %}
+
+{% block content %}
+    <h1 class="text-center mt-4">Users</h1>
+    
+    <div class="container row gap-3 d-flex justify-content-center"> 
+        <!-- <form method="post" class="d-flex align-items-center gap-2"> -->
+        <div class="col-auto ms-auto">
+            <form method="post" class="d-flex align-items-end gap-2" style="width:auto;">
+                {% csrf_token %}
+                <select class="form-select" name="sort_by_user" id="sort-by-user" aria-label="Sort by user">
+                    <option selected disabled>Sort by</option>
+                    <option value="username_asc" {% if sorting_criteria == "username_asc" %}selected{% endif %}>Username ascending</option>
+                    <option value="username_desc" {% if sorting_criteria == "username_desc" %}selected{% endif %}>Username descending</option>
+                    <option value="oldest_ac_first" {% if sorting_criteria == "oldest_ac_first" %}selected{% endif %}>Oldest accounts first</option>
+                    <option value="youngest_ac_first" {% if sorting_criteria == "youngest_ac_first" %}selected{% endif %}>Youngest accounts first</option>
+                </select>
+            </form>
+        </div>
+
+        <div id="posts-container-users" class="col-10">
+            {% include "partials/user_list.html" %}
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#sort-by-user').change(function() {
+                var sortingCriteria = $(this).val();
+                var query = $('#query').val();
+                
+                $.ajax({
+                    url: "{% url 'users' %}",
+                    type: "POST",
+                    data: {
+                        'search': query,
+                        'sort_by_user': sortingCriteria,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        $('#posts-container-users').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                    }
+                });
+            });
+        });
+    </script>
+
+{% endblock content %}

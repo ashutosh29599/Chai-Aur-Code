@@ -30,6 +30,26 @@ def get_tweet_sorting_map():
     return sorting_map
 
 
+def get_user_sorting_maps():
+    profile_sorting_map = {
+        "default": "user__username",
+        "username_asc": "user__username",
+        "username_desc": "-user__username",
+        "oldest_ac_first": "user__date_joined",
+        "youngest_ac_first": "-user__date_joined",
+    }
+
+    user_sorting_map = {
+        "default": "username",
+        "username_asc": "username",
+        "username_desc": "-username",
+        "oldest_ac_first": "date_joined",
+        "youngest_ac_first": "-date_joined",
+    }
+
+    return profile_sorting_map, user_sorting_map
+
+
 def tweet_home(request):
     sorting_map = get_tweet_sorting_map()
     sorting_criteria = request.POST.get("sort_by", "default")
@@ -53,21 +73,7 @@ def tweet_search(request):
         user_sorting_criteria = request.POST.get("sort_by_user", "default")
         sort_element = request.POST.get("sort_element", "users")
 
-        profile_sorting_map = {
-            "default": "user__username",
-            "username_asc": "user__username",
-            "username_desc": "-user__username",
-            "oldest_ac_first": "user__date_joined",
-            "youngest_ac_first": "-user__date_joined",
-        }
-
-        user_sorting_map = {
-            "default": "username",
-            "username_asc": "username",
-            "username_desc": "-username",
-            "oldest_ac_first": "date_joined",
-            "youngest_ac_first": "-date_joined",
-        }
+        profile_sorting_map, user_sorting_map = get_user_sorting_maps()
 
         if query:
             tweet_sorting_map = get_tweet_sorting_map()
@@ -85,7 +91,7 @@ def tweet_search(request):
 
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 if sort_element == "users":
-                    template_to_render = "partials/tweet_user_list.html"
+                    template_to_render = "partials/user_list.html"
                 else:
                     template_to_render = "partials/tweet_list.html"
 
@@ -112,6 +118,28 @@ def tweet_search(request):
 
     return redirect("tweet_home")
 
+def users(request):
+    user_sorting_criteria = request.POST.get("sort_by_user", "default")
+    profile_sorting_map, user_sorting_map = get_user_sorting_maps()
+
+    profiles_queried = Profile.objects.all().order_by(profile_sorting_map[user_sorting_criteria])
+    users_queried = User.objects.all().order_by(user_sorting_map[user_sorting_criteria])
+
+    users_and_profiles_queried = zip(users_queried, profiles_queried)
+
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        template_to_render = "partials/user_list.html"
+    else:
+        template_to_render = "users.html"
+
+    return render(request, 
+                  template_to_render, 
+                  {
+                    "users_and_profiles_queried": users_and_profiles_queried,
+                    "users_count": len(users_queried),
+                    "page": "users",
+                  }
+                )
 
 @login_required
 def tweet_create(request):
