@@ -5,8 +5,9 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class TweetManager(models.Manager):
-    def get_tweets_for_user(self, user):
-        return self.filter(user=user).order_by("-created_at")
+    def get_tweets_for_user(self, user, ordering_criteria):
+        # return self.filter(user=user).order_by("-created_at")
+        return self.filter(user=user).order_by(ordering_criteria)
 
 
 class Tweet(models.Model):

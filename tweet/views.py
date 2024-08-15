@@ -18,7 +18,7 @@ def index(request):
     return render(request, "index.html")
 
 
-def get_tweet_sorting_map():
+def get_post_sorting_map():
     sorting_map = {
         "default": "-created_at",
         "latest_first": "-created_at",
@@ -51,7 +51,7 @@ def get_user_sorting_maps():
 
 
 def tweet_home(request):
-    sorting_map = get_tweet_sorting_map()
+    sorting_map = get_post_sorting_map()
     sorting_criteria = request.POST.get("sort_by", "default")
     tweets = Tweet.objects.all().order_by(sorting_map[sorting_criteria])
 
@@ -76,7 +76,7 @@ def tweet_search(request):
         profile_sorting_map, user_sorting_map = get_user_sorting_maps()
 
         if query:
-            tweet_sorting_map = get_tweet_sorting_map()
+            tweet_sorting_map = get_post_sorting_map()
             tweets = Tweet.objects.filter(text__icontains=query).order_by(tweet_sorting_map[tweet_sorting_criteria])
 
             profiles_queried = Profile.objects.filter(

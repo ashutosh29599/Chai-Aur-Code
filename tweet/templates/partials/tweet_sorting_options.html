@@ -4,7 +4,9 @@
         <option selected disabled>Sort by</option>
         <option value="latest_first" {% if sorting_criteria == "latest_first" %}selected{% endif %}>Latest first</option>
         <option value="oldest_first" {% if sorting_criteria == "oldest_first" %}selected{% endif %}>Oldest first</option>
-        <option value="username_asc" {% if sorting_criteria == "username_asc" %}selected{% endif %}>Username ascending</option>
-        <option value="username_desc" {% if sorting_criteria == "username_desc" %}selected{% endif %}>Username descending</option>
+        {% if page != "profile" %}
+            <option value="username_asc" {% if sorting_criteria == "username_asc" %}selected{% endif %}>Username ascending</option>
+            <option value="username_desc" {% if sorting_criteria == "username_desc" %}selected{% endif %}>Username descending</option>
+        {% endif %}
     </select>
 </form>

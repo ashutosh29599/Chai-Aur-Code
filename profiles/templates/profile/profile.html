@@ -95,45 +95,14 @@
     {% endif %} 
     </div>
 
-    
-
     {% if tweets %}
         <div class="container row gap-3 mt-3 collapse" id="collapseTweets">
-            {% for tweet in tweets %}
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <div class="card-title d-flex justify-content-between align-items-center">
-                            <h5>
-                                <a href="{% url 'profile' tweet.user.id %}" class="btn btn-sm btn-outline-info">{{ tweet.user.username }}</a>
-                            </h5>
-                            {% if tweet.user == user %}
-                                <div>
-                                    <a href="{% url 'tweet_edit' tweet.id %}" class="btn btn-sm btn-outline-light">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <a href="{% url 'tweet_delete' tweet.id %}" class="btn btn-sm btn-outline-danger">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <p class="card-text">
-                            <div class="text-body text-opacity-50">
-                                <small>Created: {{ tweet.created_at }}</small>
-                                {% if tweet.created_at|date:"Y-m-d H:i:s" != tweet.updated_at|date:"Y-m-d H:i:s" %}
-                                    <small>Updated: {{tweet.updated_at}}</small>
-                                {% endif %}
-                            </div>
-                        </p>
-                        <hr>
-                        <p class="card-text">{{ tweet.text }}</p>
-                        {% if tweet.photo %}
-                            <img src="{{ tweet.photo.url }}" class="card-img-bottom" alt="...">
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
+            <div class="col-12 d-flex align-items-end justify-content-end">
+                {% include "partials/tweet_sorting_options.html" %}
+            </div>
+            <div id="posts-container">
+                {% include "partials/tweet_list.html" %}
+            </div>
         </div>
     {% endif %}
 
@@ -158,5 +127,27 @@
             }
         });
     });
+
+    $(document).ready(function() {
+        $('#sort-by').change(function() {
+            var sortingCriteria = $(this).val();
+            
+            $.ajax({
+                url: "{% url 'profile' request.user.id %}",
+                type: "POST",
+                data: {
+                    'sort_by': sortingCriteria,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    $('#posts-container').html(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                }
+            });
+        });
+    });
+
 </script>
 {% endblock content %}
