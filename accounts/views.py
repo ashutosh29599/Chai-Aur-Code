@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib import messages
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
@@ -36,8 +37,10 @@ def change_password(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
-
-        return redirect(reverse("profile", kwargs={"user_id": request.user.id}))
-    
-    form = PasswordChangeForm(request.user)
+            messages.success(request, "Your password was successfully updated!")
+            return redirect(reverse("profile", kwargs={"user_id": request.user.id}))
+        else:
+            messages.error(request, "Please fix the errors...")
+    else:
+        form = PasswordChangeForm(request.user)
     return render(request, "change_password/change_password.html", {"form": form})

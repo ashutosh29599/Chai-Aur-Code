@@ -14,9 +14,21 @@
     {% else %}
         <h1 class="text-center mt-4">Profile Page does not exist...</h1>
     {% endif %}
-
+    <div class="d-flex justify-content-center">
+        {% if messages %}
+            <div class="alert alert-dismissible fade show" style="width: 500px;" role="alert">
+                {% for message in messages %}
+                    <div class="alert alert-{{message.tags}}">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
     <div class="d-flex justify-content-center my-3">
         <div class="container row" style="width:50%;">
+            <!-- After successfully updating pwd, the page is redirected here and the user sees the success msg.  -->
             <div class="btn-group" role="group">
                 <input type="checkbox" class="btn-check" id="btncheck-profile" autocomplete="off" checked>
                 <label class="btn btn-outline-light" for="btncheck-profile" data-bs-toggle="collapse" data-bs-target="#profileCollapse">Profile</label>
