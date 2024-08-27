@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 
 from accounts.views import register, change_password
 
-class URLTests(SimpleTestCase):
+class AccountsURLTest(SimpleTestCase):
     def test_register_url_resolves(self):
         url = reverse('register')
         self.assertEqual(resolve(url).func, register)
