@@ -30,6 +30,7 @@ class PostsCreateEditDeleteTest(TestCase):
 
         self.client.login(username='test_user', password='super_secret_pwd_1')
 
+    # Post Create #
     def test_create_post_GET(self):
         response = self.client.get(reverse('tweet_create'))
 
@@ -72,6 +73,7 @@ class PostsCreateEditDeleteTest(TestCase):
 
         self.assertTemplateUsed(response, 'tweet_form.html')
 
+    # Post Edit #
     def test_edit_post_GET(self):
         data = {
             'user': self.user,
@@ -115,3 +117,55 @@ class PostsCreateEditDeleteTest(TestCase):
         response = self.client.post(reverse('tweet_edit', kwargs={'tweet_id': 1}))
 
         self.assertEqual(response.status_code, 404)
+
+    # Post Delete #
+    def test_delete_post_GET(self):
+        # Create the post to be deleted
+        data = {
+            'user': self.user,
+            'text': 'Test Post!',   
+        }
+
+        self.client.post(reverse('tweet_create'), data)
+        post = Tweet.objects.all()[0]
+
+        response = self.client.get(reverse('tweet_delete', kwargs={'tweet_id': post.id}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'tweet_confirm_delete.html')
+
+    def test_delete_post_POST_valid_data(self):
+        # Create the post to be deleted
+        data = {
+            'user': self.user,
+            'text': 'Test Post!',   
+        }
+
+        self.client.post(reverse('tweet_create'), data)
+        post = Tweet.objects.all()[0]
+
+        response = self.client.post(reverse('tweet_delete', kwargs={'tweet_id': post.id}))
+
+        self.assertEqual(Tweet.objects.count(), 0)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('tweet_home'))
+        
+    def test_delete_post_POST_invalid_data(self):
+        response = self.client.post(reverse('tweet_delete', kwargs={'tweet_id': 1}))
+
+        self.assertEqual(response.status_code, 404)
+        
+
+class UsersViewTest(TestCase):
+    def test_users_GET(self):
+        response = self.client.get(reverse('users'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users.html')
+
+    def test_users_ajax(self):
+        response = self.client.get(reverse('users'), HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'partials/user_list.html')
+
