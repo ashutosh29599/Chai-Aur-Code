@@ -1,3 +1,6 @@
+# selenium, firefox geckodriver
+geckodriver
+
 # Django #
 *.log
 *.pot

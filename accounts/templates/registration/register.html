@@ -12,7 +12,7 @@
             {% csrf_token %}
             <!-- {{ form.as_p }} -->
             {{ form | crispy }}
-            <button class="btn btn-primary">Register</button>
+            <button class="btn btn-primary" name="register">Register</button>
         </form>
         <br>
         <p>Already have an account? <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">Log in here!</a></p>
