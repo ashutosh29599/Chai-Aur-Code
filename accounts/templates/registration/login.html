@@ -2,6 +2,10 @@
 {% load crispy_forms_filters %}
 {% load crispy_forms_tags %}
 
+{% block title %}
+    Login
+{% endblock title %}
+
 {% block content %}
     <div class="col-sm-4 container">
         <h2 class="text-center my-4">Login</h2>
@@ -16,7 +20,7 @@
                     <!-- Source: https://stackoverflow.com/questions/71641974/implementing-django-bootstrap-crispy-forms-into-default-signup-login-pages -->
                     <!-- {{ form.username | as_crispy_field }} -->
                     {{ form|crispy }}
-                    <button class="btn btn-primary">Log In</button>
+                    <button class="btn btn-primary" name="login">Log In</button>
             </form>
         </div>
         <br>

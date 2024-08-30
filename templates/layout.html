@@ -70,13 +70,13 @@
             {% if user.is_authenticated %}
                 <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button class="btn btn-danger ms-2" type="submit">Logout</button>
+                    <button class="btn btn-danger ms-2" type="submit" name="logout">Logout</button>
                 </form>
-                <a href="{% url 'profile' user.id %}" class="btn">
+                <a href="{% url 'profile' user.id %}" class="btn" name="profile_btn">
                     <i class="bi bi-person-circle ms-1 me-1" style="font-size: 1.5em;"></i>
                 </a>
             {% else %}
-                <a href="{% url 'login' %}" class="btn btn-outline-primary mx-2">Login</a>
+                <a href="{% url 'login' %}" class="btn btn-outline-primary mx-2" name="login">Login</a>
                 <a href="{% url 'register' %}" class="btn btn-primary me-2">Register</a>
             {% endif %}
             

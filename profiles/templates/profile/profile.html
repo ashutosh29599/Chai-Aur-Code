@@ -1,19 +1,19 @@
 {% extends "layout.html" %}
 
-
-
 {% block title %}
-    Chai aur Tweet
+    Profile
 {% endblock title %}
 
 {% block content %}
+
     {% if profile_owner.id and profile_owner.id == request.user.id %}
-        <h1 class="text-center mt-4">Welcome to your profile, {{ user.username }}!</h1>
+        <h1 class="text-center mt-4" name="profile_welcome_msg">Welcome to your profile, {{ user.username }}!</h1>
     {% elif profile_owner.id %}
-        <h1 class="text-center mt-4">Welcome to {{ profile_owner.user.username }}'s profile!</h1>
+        <h1 class="text-center mt-4" name="profile_welcome_msg">Welcome to {{ profile_owner.user.username }}'s profile!</h1>
     {% else %}
-        <h1 class="text-center mt-4">Profile Page does not exist...</h1>
+        <h1 class="text-center mt-4" name="profile_welcome_msg">Profile Page does not exist...</h1>
     {% endif %}
+
     <div class="d-flex justify-content-center">
         {% if messages %}
             <div class="alert alert-dismissible fade show" style="width: 500px;" role="alert">
