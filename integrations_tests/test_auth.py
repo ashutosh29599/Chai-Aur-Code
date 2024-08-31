@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 
-from django.test import LiveServerTestCase
 from django.urls import reverse
 
 from selenium import webdriver
@@ -9,25 +8,13 @@ from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
+from .base import IntegrationTest
 from .factories import UserProfileFactory
 
 from .utils import scroll_and_click
 
 
-class UserAuthTest(LiveServerTestCase):
-    def setUp(self):
-        gecko_driver_path = (
-            "/Users/ashutosh/Desktop/Programming/Django/Chai-Aur-Tweet/geckodriver"
-        )
-        service = Service(executable_path=gecko_driver_path)
-        # options = Options()
-
-        self.browser = webdriver.Firefox(service=service)
-
-    def tearDown(self):
-        self.browser.quit()
-        User.objects.all().delete()
-
+class UserAuthTest(IntegrationTest):
     def test_register_a_new_account(self):
         url = self.live_server_url + reverse("register")
         self.browser.get(url)

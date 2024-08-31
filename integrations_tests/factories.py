@@ -3,6 +3,7 @@ from django.urls import reverse
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
 
 from django.contrib.auth.models import User
 
@@ -83,3 +84,33 @@ class PostsFactory:
         )
         
         scroll_and_click(browser=browser, element=delete_btn)
+
+    @staticmethod
+    def create_posts_from_multiple_users_for_sorting(browser, live_server_url, sort_by):
+        UserProfileFactory.create_user(username='a_test_user', password='super_secret_pwd_1234')
+        UserProfileFactory.login_user(browser=browser, live_server_url=live_server_url,
+                                      username='a_test_user', password='super_secret_pwd_1234')
+        PostsFactory.create_a_post(browser=browser, post_text='This post is by a_test_user!')
+
+        UserProfileFactory.create_user(username='b_test_user', password='super_secret_pwd_1234')
+        UserProfileFactory.login_user(browser=browser, live_server_url=live_server_url,
+                                      username='b_test_user', password='super_secret_pwd_1234')
+        PostsFactory.create_a_post(browser=browser, post_text='This post is by b_test_user!')
+
+        WebDriverWait(browser, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//p[@name='post_text']"))
+        )
+
+        sort_by_options = browser.find_element(By.NAME, 'sort_by')
+        sort_by_options = Select(sort_by_options)
+
+        sort_by_options.select_by_value(sort_by)
+
+        WebDriverWait(browser, 10).until(
+            EC.presence_of_element_located((By.ID, 'posts-container'))
+        )
+
+        posts = browser.find_elements(By.NAME, 'post_text')
+        posts = [post.text for post in posts]
+
+        return posts

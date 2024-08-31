@@ -4,11 +4,14 @@
     3) Delete post
     4) Click on username on post, verify if it redirects to profile
     5) Sorting
+        5.1) Latest first
+        5.2) Oldest first
+        5.3) Username asc
+        5.4) Username des
 """
 
 from django.contrib.auth.models import User
 
-from django.test import LiveServerTestCase
 from django.urls import reverse
 
 from selenium import webdriver
@@ -17,30 +20,17 @@ from selenium.webdriver.firefox.service import Service
 # from selenium.webdriver.firefox.options import Options 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
 
+from .base import IntegrationTest
 from .factories import UserProfileFactory, PostsFactory
-from tweet.models import Tweet
 
 from .utils import scroll_and_click
 
 import time
 
 
-class PostsTest(LiveServerTestCase):
-    def setUp(self):
-        gecko_driver_path = (
-            "/Users/ashutosh/Desktop/Programming/Django/Chai-Aur-Tweet/geckodriver"
-        )
-        service = Service(executable_path=gecko_driver_path)
-        # options = Options()
-        # options.add_argument("-headless") 
-
-        self.browser = webdriver.Firefox(service=service)
-
-    def tearDown(self):
-        self.browser.quit()
-        User.objects.all().delete()
-
+class PostsTest(IntegrationTest):
     def test_create_a_post(self):
         UserProfileFactory.create_user(username='test_user', password='super_secret_pwd_1234')
         UserProfileFactory.login_user(browser=self.browser, live_server_url=self.live_server_url,
@@ -157,3 +147,41 @@ class PostsTest(LiveServerTestCase):
         )
 
         self.assertEqual(self.browser.title, 'Profile')
+
+
+class PostsSortingTest(IntegrationTest):
+    def test_sorting_latest_first(self): 
+        posts = PostsFactory.create_posts_from_multiple_users_for_sorting(
+            browser=self.browser,
+            live_server_url=self.live_server_url,
+            sort_by='latest_first'
+        )
+
+        self.assertEqual(posts, ['This post is by b_test_user!', 'This post is by a_test_user!'])
+
+    def test_sorting_oldest_first(self):
+        posts = PostsFactory.create_posts_from_multiple_users_for_sorting(
+            browser=self.browser,
+            live_server_url=self.live_server_url,
+            sort_by='oldest_first'
+        )
+
+        self.assertEqual(posts, ['This post is by a_test_user!', 'This post is by b_test_user!'])
+
+    def test_sorting_username_ascending(self):
+        posts = PostsFactory.create_posts_from_multiple_users_for_sorting(
+            browser=self.browser,
+            live_server_url=self.live_server_url,
+            sort_by='username_asc'
+        )
+        
+        self.assertEqual(posts, ['This post is by a_test_user!', 'This post is by b_test_user!'])
+
+    def test_sorting_username_descending(self):
+        posts = PostsFactory.create_posts_from_multiple_users_for_sorting(
+            browser=self.browser,
+            live_server_url=self.live_server_url,
+            sort_by='username_desc'
+        )
+        
+        self.assertEqual(posts, ['This post is by b_test_user!', 'This post is by a_test_user!'])

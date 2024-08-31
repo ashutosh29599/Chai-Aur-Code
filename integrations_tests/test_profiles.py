@@ -10,24 +10,13 @@ from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
+from .base import IntegrationTest
 from .factories import UserProfileFactory
 
 from .utils import scroll_and_click
 
 
-class UserProfileTest(LiveServerTestCase):
-    def setUp(self):
-        gecko_driver_path = '/Users/ashutosh/Desktop/Programming/Django/Chai-Aur-Tweet/geckodriver'
-        service = Service(executable_path=gecko_driver_path)
-        # options = Options()
-        # options.add_argument("-headless")
-
-        self.browser = webdriver.Firefox(service=service)
-    
-    def tearDown(self):
-        self.browser.quit()
-        User.objects.all().delete()
-
+class UserProfileTest(IntegrationTest):
     def test_go_to_user_profile(self):
         UserProfileFactory.create_user(username='test_user', password='super_secret_pwd_1234')
         UserProfileFactory.login_user(browser=self.browser, live_server_url=self.live_server_url,
