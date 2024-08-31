@@ -51,21 +51,21 @@
                     <span class="input-group-text" id="basic-addon1">
                         <i class="bi bi-at" style="font-size: 1.2em;"></i>
                     </span>
-                    <input class="form-control" type="text" value="{{ profile_owner.user.username }}" aria-label="Disabled input example" disabled readonly>
+                    <input class="form-control" type="text" name="username" value="{{ profile_owner.user.username }}" aria-label="Disabled input example" disabled readonly>
                 </div>
 
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
                         <i class="bi bi-person" style="font-size: 1.2em;"></i>
                     </span>
-                    <input class="form-control" type="text" value=" {% if profile_owner.first_name %}{{profile_owner.first_name}}{% endif %}{% if profile_owner.last_name %} {{profile_owner.last_name}}{% endif %}" aria-label="Disabled input example" disabled readonly>
+                    <input class="form-control" type="text" name="name" value=" {% if profile_owner.first_name %}{{profile_owner.first_name}}{% endif %}{% if profile_owner.last_name %} {{profile_owner.last_name}}{% endif %}" aria-label="Disabled input example" disabled readonly>
                 </div>
 
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
                         <i class="bi bi-envelope-at" style="font-size: 1.2em;"></i>
                     </span>
-                    <input class="form-control" type="text" value="{{ profile_owner.email }}" aria-label="Disabled input example" disabled readonly>
+                    <input class="form-control" type="text" name="email" value="{{ profile_owner.email }}" aria-label="Disabled input example" disabled readonly>
                 </div>
 
                 <!-- <div class="input-group mb-3">
@@ -80,17 +80,17 @@
                         <i class="bi bi-chat-left-quote" style="font-size: 1.2em;"></i>
                     </span>
                     {% if profile_owner.bio %}
-                        <textarea class="form-control" rows="4" style="height:100%;" aria-label="With textarea" disabled readonly>{{ profile_owner.bio }}</textarea>
+                        <textarea class="form-control" name="bio" rows="4" style="height:100%;" aria-label="With textarea" disabled readonly>{{ profile_owner.bio }}</textarea>
                     {% else %}
-                        <textarea class="form-control" rows="4" style="height:100%;" aria-label="With textarea" placeholder="The bio goes here..." disabled readonly></textarea>
+                        <textarea class="form-control" name="bio" rows="4" style="height:100%;" aria-label="With textarea" placeholder="The bio goes here..." disabled readonly></textarea>
                     {% endif %}
                 </div>
             </div>
         </div>
         {% if user.is_authenticated and profile_owner.user.id == request.user.id %}
         <div class="text-center">
-            <a href="{% url 'edit_profile' request.user.id %}" class="btn btn-outline-secondary m-4">Edit Profile</a>
-            <a href="{% url 'change_password' %}" class="btn btn-outline-secondary m-4">Change Password</a>
+            <a href="{% url 'edit_profile' request.user.id %}" class="btn btn-outline-secondary m-4" name="edit_profile_btn">Edit Profile</a>
+            <a href="{% url 'change_password' %}" class="btn btn-outline-secondary m-4" name="change_pwd_btn">Change Password</a>
         </div>
     {% endif %} 
     </div>
