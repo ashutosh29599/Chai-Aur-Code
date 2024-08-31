@@ -11,6 +11,8 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from .factories import UserProfileFactory
 
+from .utils import scroll_and_click
+
 
 class UserAuthTest(LiveServerTestCase):
     def setUp(self):
@@ -39,18 +41,10 @@ class UserAuthTest(LiveServerTestCase):
             "super_secret_pwd_1234"
         )
 
-        # Wait for the register button to be clickable and click it
         register_button = WebDriverWait(self.browser, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//button[@name='register']"))
         )
-
-        # Scroll into view if necessary
-        self.browser.execute_script(
-            "arguments[0].scrollIntoView(true);", register_button
-        )
-
-        # Click the button
-        self.browser.execute_script("arguments[0].click();", register_button)
+        scroll_and_click(browser=self.browser, element=register_button)
 
         WebDriverWait(self.browser, 10).until(EC.url_changes(self.browser.current_url))
 
@@ -109,31 +103,17 @@ class UserAuthTest(LiveServerTestCase):
         change_pwd_btn = WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.XPATH, "//a[@name='change_pwd_btn']"))
         )
-        self.browser.execute_script(
-            "arguments[0].scrollIntoView(true);", change_pwd_btn
-        )
-        self.browser.execute_script("arguments[0].click();", change_pwd_btn)
+        scroll_and_click(browser=self.browser, element=change_pwd_btn)
 
         change_pwd_btn = WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located(
-                (By.XPATH, "//button[@name='change_pwd_btn']")
-            )
+            EC.presence_of_element_located((By.XPATH, "//button[@name='change_pwd_btn']"))
         )
 
-        self.browser.find_element(By.XPATH, "//input[@name='old_password']").send_keys(
-            "super_secret_pwd_1234"
-        )
-        self.browser.find_element(By.XPATH, "//input[@name='new_password1']").send_keys(
-            "new_secret_pwd_6789"
-        )
-        self.browser.find_element(By.XPATH, "//input[@name='new_password2']").send_keys(
-            "new_secret_pwd_6789"
-        )
+        self.browser.find_element(By.XPATH, "//input[@name='old_password']").send_keys("super_secret_pwd_1234")
+        self.browser.find_element(By.XPATH, "//input[@name='new_password1']").send_keys("new_secret_pwd_6789")
+        self.browser.find_element(By.XPATH, "//input[@name='new_password2']").send_keys("new_secret_pwd_6789")
 
-        self.browser.execute_script(
-            "arguments[0].scrollIntoView(true);", change_pwd_btn
-        )
-        self.browser.execute_script("arguments[0].click();", change_pwd_btn)
+        scroll_and_click(browser=self.browser, element=change_pwd_btn)
 
         WebDriverWait(self.browser, 10).until(EC.url_changes(self.browser.current_url))
 

@@ -11,7 +11,7 @@
     <div class="container">
         <div class="row align-items-center mb-4">
             <div class="col-auto">
-                <a href="{% url 'tweet_create' %}" class="btn btn-outline-primary">Create a Tweet!</a>
+                <a href="{% url 'tweet_create' %}" class="btn btn-outline-primary" name="create_post_btn">Create a Tweet!</a>
             </div>
             <div class="col-auto ms-auto">
                 {% include "partials/tweet_sorting_options.html" %}

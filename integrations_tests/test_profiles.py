@@ -6,10 +6,13 @@ from django.urls import reverse
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.service import Service
+# from selenium.webdriver.firefox.options import Options 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 from .factories import UserProfileFactory
+
+from .utils import scroll_and_click
 
 
 class UserProfileTest(LiveServerTestCase):
@@ -17,6 +20,7 @@ class UserProfileTest(LiveServerTestCase):
         gecko_driver_path = '/Users/ashutosh/Desktop/Programming/Django/Chai-Aur-Tweet/geckodriver'
         service = Service(executable_path=gecko_driver_path)
         # options = Options()
+        # options.add_argument("-headless")
 
         self.browser = webdriver.Firefox(service=service)
     
@@ -32,7 +36,7 @@ class UserProfileTest(LiveServerTestCase):
         UserProfileFactory.go_to_user_profile(browser=self.browser)
 
         WebDriverWait(self.browser, 10).until(
-            EC.url_changes(self.browser.current_url)
+            EC.url_matches(self.live_server_url + reverse('profile', kwargs={'user_id': User.objects.all()[0].id}))
         )
         
         self.assertEqual(self.browser.title, 'Profile')
@@ -47,8 +51,7 @@ class UserProfileTest(LiveServerTestCase):
         edit_profile_btn = WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.XPATH, "//a[@name='edit_profile_btn']"))
         )
-        self.browser.execute_script("arguments[0].scrollIntoView(true);", edit_profile_btn)
-        self.browser.execute_script("arguments[0].click();", edit_profile_btn)
+        scroll_and_click(browser=self.browser, element=edit_profile_btn)
 
         WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.XPATH, '//h1[contains(text(), "Update your profile,")]'))
@@ -61,8 +64,7 @@ class UserProfileTest(LiveServerTestCase):
         update_btn = WebDriverWait(self.browser, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//button[@name='update_btn']"))
         )
-        self.browser.execute_script("arguments[0].scrollIntoView();", update_btn)
-        self.browser.execute_script("arguments[0].click(true);", update_btn)
+        scroll_and_click(browser=self.browser, element=update_btn)
 
         WebDriverWait(self.browser, 10).until(
             EC.url_changes(self.browser.current_url)
@@ -76,4 +78,3 @@ class UserProfileTest(LiveServerTestCase):
         self.assertEqual(name, 'Test User')
         self.assertEqual(email, 'test_user@domain.com')
         self.assertEqual(bio, 'This is the test user\'s bio!')
-

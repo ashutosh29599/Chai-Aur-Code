@@ -30,11 +30,11 @@
                     {% csrf_token %}
                     <!-- {{ form.as_p }} -->
                     {{ form | crispy }}
-                    <button class="btn btn-success" type="Submit">Post Tweet</button>
+                    <button class="btn btn-success" type="Submit" name="post_post_btn">Post Tweet</button>
                 </form>
             </div>  
             <div class="card-footer d-flex justify-content-center">
-                <a href="{% url 'tweet_home' %}" class="btn btn-outline-secondary mt-2">Back to Tweet List</a>
+                <a href="{% url 'tweet_home' %}" class="btn btn-outline-secondary mt-2" name="back_to_home_btn">Back to Home!</a>
             </div>
         </div>
     </div>
