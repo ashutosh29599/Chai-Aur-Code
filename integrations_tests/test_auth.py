@@ -11,8 +11,6 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from .factories import UserProfileFactory
 
-import time
-
 
 class UserAuthTest(LiveServerTestCase):
     def setUp(self):

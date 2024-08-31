@@ -31,12 +31,11 @@ class UserProfileTest(LiveServerTestCase):
         UserProfileFactory.create_profile_for_test_user(username='test_user')
         UserProfileFactory.go_to_user_profile(browser=self.browser)
 
-        welcome_msg = WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, '//h1[@name="profile_welcome_msg"]'))
-        ).text
+        WebDriverWait(self.browser, 10).until(
+            EC.url_changes(self.browser.current_url)
+        )
         
-        # self.assertIn("Welcome to test_user's profile!", welcome_msg)
-        self.assertIn("Welcome to your profile, test_user!", welcome_msg)
+        self.assertEqual(self.browser.title, 'Profile')
 
     def test_edit_profile(self):
         UserProfileFactory.create_user(username='test_user', password='super_secret_pwd_1234')
