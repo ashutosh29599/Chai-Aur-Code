@@ -18,7 +18,9 @@ from .utils import scroll_and_click
 
 class UserProfileTest(IntegrationTest):
     def test_go_to_user_profile(self):
-        UserProfileFactory.create_user(username='test_user', password='super_secret_pwd_1234')
+        UserProfileFactory.create_user(
+            username='test_user', password='super_secret_pwd_1234', email='test_user@domain.com'
+        )
         UserProfileFactory.login_user(browser=self.browser, live_server_url=self.live_server_url,
                                       username='test_user', password='super_secret_pwd_1234')
         UserProfileFactory.create_profile_for_test_user(username='test_user')
@@ -31,7 +33,9 @@ class UserProfileTest(IntegrationTest):
         self.assertEqual(self.browser.title, 'Profile')
 
     def test_edit_profile(self):
-        UserProfileFactory.create_user(username='test_user', password='super_secret_pwd_1234')
+        UserProfileFactory.create_user(
+            username='test_user', password='super_secret_pwd_1234', email='test_user@domain.com'
+        )
         UserProfileFactory.login_user(browser=self.browser, live_server_url=self.live_server_url,
                                       username='test_user', password='super_secret_pwd_1234')
         UserProfileFactory.create_profile_for_test_user(username='test_user')
@@ -47,8 +51,11 @@ class UserProfileTest(IntegrationTest):
         )
         self.browser.find_element(By.NAME, 'first_name').send_keys('Test')
         self.browser.find_element(By.NAME, 'last_name').send_keys('User')
-        self.browser.find_element(By.NAME, 'email').send_keys('test_user@domain.com')
         self.browser.find_element(By.NAME, 'bio').send_keys('This is the test user\'s bio!')
+
+        email = self.browser.find_element(By.NAME, 'email')
+        email.clear()
+        email.send_keys('test_user@domain.com')
 
         update_btn = WebDriverWait(self.browser, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//button[@name='update_btn']"))

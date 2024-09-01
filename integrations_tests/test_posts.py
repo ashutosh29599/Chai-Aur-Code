@@ -32,7 +32,9 @@ import time
 
 class PostsTest(IntegrationTest):
     def test_create_a_post(self):
-        UserProfileFactory.create_user(username='test_user', password='super_secret_pwd_1234')
+        UserProfileFactory.create_user(
+            username='test_user', password='super_secret_pwd_1234', email='test_user@domain.com'
+        )
         UserProfileFactory.login_user(browser=self.browser, live_server_url=self.live_server_url,
                                       username='test_user', password='super_secret_pwd_1234')
         
@@ -45,7 +47,9 @@ class PostsTest(IntegrationTest):
         self.assertEqual(post_text, 'This is the post text!')
 
     def test_edit_post(self):
-        UserProfileFactory.create_user(username='test_user', password='super_secret_pwd_1234')
+        UserProfileFactory.create_user(
+            username='test_user', password='super_secret_pwd_1234', email='test_user@domain.com'
+        )
         UserProfileFactory.login_user(browser=self.browser, live_server_url=self.live_server_url,
                                       username='test_user', password='super_secret_pwd_1234')
         
@@ -73,7 +77,9 @@ class PostsTest(IntegrationTest):
         self.assertEqual(post_text, 'This is the updated post test!')
 
     def test_edit_post_cancel(self):
-        UserProfileFactory.create_user(username='test_user', password='super_secret_pwd_1234')
+        UserProfileFactory.create_user(
+            username='test_user', password='super_secret_pwd_1234', email='test_user@domain.com'
+        )
         UserProfileFactory.login_user(browser=self.browser, live_server_url=self.live_server_url,
                                       username='test_user', password='super_secret_pwd_1234')
         
@@ -96,7 +102,9 @@ class PostsTest(IntegrationTest):
         self.assertEqual(post_text, 'This is the post text!')
 
     def test_delete_post(self):
-        UserProfileFactory.create_user(username='test_user', password='super_secret_pwd_1234')
+        UserProfileFactory.create_user(
+            username='test_user', password='super_secret_pwd_1234', email='test_user@domain.com'
+        )
         UserProfileFactory.login_user(browser=self.browser, live_server_url=self.live_server_url,
                                       username='test_user', password='super_secret_pwd_1234')
         
@@ -111,7 +119,9 @@ class PostsTest(IntegrationTest):
         self.assertNotIn('This is the post text!', self.browser.page_source)
     
     def test_delete_post_cancel(self):
-        UserProfileFactory.create_user(username='test_user', password='super_secret_pwd_1234')
+        UserProfileFactory.create_user(
+            username='test_user', password='super_secret_pwd_1234', email='test_user@domain.com'
+        )
         UserProfileFactory.login_user(browser=self.browser, live_server_url=self.live_server_url,
                                       username='test_user', password='super_secret_pwd_1234')
         
@@ -130,7 +140,9 @@ class PostsTest(IntegrationTest):
         self.assertEqual(post_text, 'This is the post text!')
 
     def test_go_to_post_user(self):
-        UserProfileFactory.create_user(username='test_user', password='super_secret_pwd_1234')
+        UserProfileFactory.create_user(
+            username='test_user', password='super_secret_pwd_1234', email='test_user@domain.com'
+        )
         UserProfileFactory.login_user(browser=self.browser, live_server_url=self.live_server_url,
                                       username='test_user', password='super_secret_pwd_1234')
         UserProfileFactory.create_profile_for_test_user(username='test_user')

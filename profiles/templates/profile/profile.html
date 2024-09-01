@@ -133,7 +133,7 @@
             var sortingCriteria = $(this).val();
             
             $.ajax({
-                url: "{% url 'profile' request.user.id %}",
+                url: "{% url 'profile' profile_owner.user.id %}",
                 type: "POST",
                 data: {
                     'sort_by': sortingCriteria,

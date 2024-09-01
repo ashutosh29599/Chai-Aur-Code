@@ -19,7 +19,7 @@
                 
             </div>
             <div class="card-footer bg-transparent border-0 d-flex justify-content-center">
-                <a href="{% url 'profile' usr_queried.id %}" class="btn btn-outline-info">{{ usr_queried }}</a>
+                <a href="{% url 'profile' usr_queried.id %}" class="btn btn-outline-info" name="user_profile_btn">{{ usr_queried }}</a>
             </div>
         </div>
     {% endfor %}

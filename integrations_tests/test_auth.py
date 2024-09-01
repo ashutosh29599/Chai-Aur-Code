@@ -40,7 +40,7 @@ class UserAuthTest(IntegrationTest):
 
     def test_login_with_new_account(self):
         UserProfileFactory.create_user(
-            username="test_user", password="super_secret_pwd_1234"
+            username='test_user', password='super_secret_pwd_1234', email='test_user@domain.com'
         )
         UserProfileFactory.login_user(
             browser=self.browser,
@@ -56,7 +56,7 @@ class UserAuthTest(IntegrationTest):
 
     def test_logout(self):
         UserProfileFactory.create_user(
-            username="test_user", password="super_secret_pwd_1234"
+            username='test_user', password='super_secret_pwd_1234', email='test_user@domain.com'
         )
         UserProfileFactory.login_user(
             browser=self.browser,
@@ -76,7 +76,7 @@ class UserAuthTest(IntegrationTest):
 
     def test_change_password(self):
         UserProfileFactory.create_user(
-            username="test_user", password="super_secret_pwd_1234"
+            username='test_user', password='super_secret_pwd_1234', email='test_user@domain.com'
         )
         UserProfileFactory.login_user(
             browser=self.browser,
