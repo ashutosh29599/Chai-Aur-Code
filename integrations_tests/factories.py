@@ -12,6 +12,7 @@ from profiles.models import Profile
 from .utils import scroll_and_click
 
 
+#TODO: Some of the factory methods have invariants that need to be followed. Possibly add try-except.
 class UserProfileFactory:
     @staticmethod
     def create_user(username='test_user', password='super_secret_pwd_1234', email='test_user@domain.com'):

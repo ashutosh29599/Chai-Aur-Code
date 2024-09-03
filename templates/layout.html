@@ -65,7 +65,7 @@
                       <li><a class="dropdown-item" href="#">Separated link</a></li>
                     </ul>
                   </div> -->
-                <button class="btn btn-outline-success me-2" type="submit">Search</button>
+                <button class="btn btn-outline-success me-2" type="submit" name="search_btn">Search</button>
             </form>
             {% if user.is_authenticated %}
                 <form method="post" action="{% url 'logout' %}">

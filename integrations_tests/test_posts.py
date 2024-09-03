@@ -157,6 +157,10 @@ class PostsTest(IntegrationTest):
         WebDriverWait(self.browser, 10).until(
             EC.url_matches(self.live_server_url + reverse('profile', kwargs={'user_id': User.objects.get(username=user_profile_btn.text).id}))
         )
+        
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//h1[@name='profile_welcome_msg']"))
+        )
 
         self.assertEqual(self.browser.title, 'Profile')
 
